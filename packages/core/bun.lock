@@ -1,0 +1,16 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "@yt_most_replayed/core",
+      "peerDependencies": {
+        "puppeteer": "^24.40.0",
+      },
+      "optionalPeers": [
+        "puppeteer",
+      ],
+    },
+  },
+  "packages": {}
+}

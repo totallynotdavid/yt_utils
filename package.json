@@ -2,27 +2,33 @@
   "name": "yt_most_replayed",
   "version": "0.0.1",
   "description": "Obtain the most replayed segments from a YouTube video",
-  "main": "src/index.js",
-  "scripts": {
-    "lint": "eslint . --ext .js",
-    "lint:fix": "eslint . --ext .js --fix",
-    "prettier": "prettier --write ."
-  },
-  "keywords": [
-    "YouTube",
-    "video",
-    "most_replayed"
+  "type": "module",
+  "files": [
+    "dist",
+    "readme.md",
+    "LICENSE"
   ],
-  "author": "David Duran <david@caefisica.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "eslint": "^8.55.0",
-    "eslint-plugin-jest": "^27.6.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "prettier": "^3.1.1"
+  "scripts": {
+    "build": "bunup",
+    "typecheck": "tsc -p packages/core/tsconfig.json --noEmit",
+    "lint": "oxlint packages",
+    "fmt": "oxfmt packages",
+    "fmt:check": "oxfmt --check packages",
+    "check": "bun run typecheck && bun run lint && bun run fmt:check"
   },
-  "dependencies": {
-    "puppeteer": "^21.6.0"
+  "author": "David Duran <dadch1404@gmail.com>",
+  "devDependencies": {
+    "@types/bun": "^1.3.0",
+    "bunup": "^0.16.31",
+    "oxfmt": "^0.43.0",
+    "oxlint": "^1.58.0"
+  },
+  "peerDependencies": {
+    "puppeteer": "^24.40.0"
+  },
+  "peerDependenciesMeta": {
+    "puppeteer": {
+      "optional": true
+    }
   }
 }
