@@ -1,0 +1,19 @@
+{
+  "name": "@yt_most_replayed/core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Core module for extracting most replayed segments",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "puppeteer": "^24.40.0"
+  },
+  "peerDependenciesMeta": {
+    "puppeteer": {
+      "optional": true
+    }
+  }
+}
