@@ -1,0 +1,14 @@
+name: release-most-replayed
+
+on:
+  push:
+    tags:
+      - 'most-replayed-v*'
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish-package.yml
+    with:
+      package_dir: packages/most-replayed
+      package_name: '@ytutils/most-replayed'
+      tag_prefix: 'most-replayed-v'

@@ -1,0 +1,14 @@
+name: release-metadata
+
+on:
+  push:
+    tags:
+      - 'metadata-v*'
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish-package.yml
+    with:
+      package_dir: packages/metadata
+      package_name: '@ytutils/metadata'
+      tag_prefix: 'metadata-v'

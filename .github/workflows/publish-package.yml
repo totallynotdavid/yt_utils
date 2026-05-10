@@ -1,0 +1,72 @@
+name: publish-package
+
+on:
+  workflow_call:
+    inputs:
+      package_dir:
+        required: true
+        type: string
+      package_name:
+        required: true
+        type: string
+      tag_prefix:
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'totallynotdavid' }}
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Resolve version from tag
+        id: version
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          prefix="${{ inputs.tag_prefix }}"
+          if [[ "$tag" != "$prefix"* ]]; then
+            echo "Tag $tag does not match expected prefix $prefix"
+            exit 1
+          fi
+          version="${tag#$prefix}"
+          if [[ -z "$version" ]]; then
+            echo "Resolved version is empty"
+            exit 1
+          fi
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Validate declared version matches tag
+        shell: bash
+        run: |
+          pkg_version=$(node -p "require('./${{ inputs.package_dir }}/package.json').version")
+          if [ "$pkg_version" != "${{ steps.version.outputs.value }}" ]; then
+            echo "Version mismatch for ${{ inputs.package_name }}: tag=${{ steps.version.outputs.value }} package=$pkg_version"
+            exit 1
+          fi
+
+      - name: Check
+        run: bun run check
+
+      - name: Publish package
+        run: npm publish --provenance --access public
+        working-directory: ${{ inputs.package_dir }}
