@@ -9,6 +9,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests"
   },
+  "dependencies": {
+    "@ytutils/core": "workspace:*"
+  },
   "peerDependencies": {
     "puppeteer": "^24.40.0"
   },

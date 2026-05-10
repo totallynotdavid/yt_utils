@@ -15,7 +15,7 @@ export type ReplaySegment = {
 
 export type MostReplayedResult = {
   videoId: string
-  durationSec: number | null
+  durationSec: number
   source: 'json' | 'svg'
   segments: ReplaySegment[]
 }
@@ -23,5 +23,5 @@ export type MostReplayedResult = {
 export type GetMostReplayedOptions = {
   parts?: number
   strategy?: ExtractionStrategy
-  allow_svg_fallback?: boolean
+  allowSvgFallback?: boolean
 }

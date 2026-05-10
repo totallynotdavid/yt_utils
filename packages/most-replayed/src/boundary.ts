@@ -1,15 +1,15 @@
+import { parseVideoId, YtUtilsError } from '@ytutils/core'
+
 import type { ExtractionStrategy, GetMostReplayedOptions } from './types'
 
 export type NormalizedGetMostReplayedOptions = {
   parts: number
   strategy: ExtractionStrategy
-  allow_svg_fallback: boolean
+  allowSvgFallback: boolean
 }
 
 export function assertVideoId(videoId: string): void {
-  if (!videoId || typeof videoId !== 'string') {
-    throw new Error('videoId must be a non-empty string')
-  }
+  parseVideoId(videoId)
 }
 
 export function normalizeGetMostReplayedOptions(
@@ -17,17 +17,17 @@ export function normalizeGetMostReplayedOptions(
 ): NormalizedGetMostReplayedOptions {
   const parts = options?.parts ?? 3
   if (!Number.isInteger(parts) || parts <= 0) {
-    throw new Error('parts must be a positive integer')
+    throw new YtUtilsError('INVALID_INPUT', 'parts must be a positive integer')
   }
 
   const strategy = options?.strategy ?? 'auto'
   if (strategy !== 'auto' && strategy !== 'json' && strategy !== 'svg') {
-    throw new Error('strategy must be one of: auto, json, svg')
+    throw new YtUtilsError('INVALID_INPUT', 'strategy must be one of: auto, json, svg')
   }
 
   return {
     parts,
     strategy,
-    allow_svg_fallback: options?.allow_svg_fallback ?? false,
+    allowSvgFallback: options?.allowSvgFallback ?? false,
   }
 }
