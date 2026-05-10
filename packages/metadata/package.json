@@ -4,12 +4,13 @@
   "private": true,
   "description": "Fetch YouTube content metadata from URLs or search queries",
   "type": "module",
-  "main": "src/youtubeMetadata.js",
+  "main": "src/index.ts",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests test/**/*.test.ts"
   },
   "dependencies": {
+    "@ytutils/core": "workspace:*",
     "dotenv": "^16.4.5"
   }
 }
