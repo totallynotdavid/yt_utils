@@ -7,7 +7,7 @@
   "main": "src/index.ts",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests --config ../../vitest.config.ts"
+    "test": "vitest run --passWithNoTests"
   },
   "peerDependencies": {
     "puppeteer": "^24.40.0"

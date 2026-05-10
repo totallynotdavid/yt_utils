@@ -11,4 +11,15 @@ export default defineConfig({
       '@ytutils/video-processor': resolve(__dirname, 'packages/video-processor/src/index.js'),
     },
   },
+  test: {
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'workspace',
+          include: ['packages/*/test/**/*.test.ts'],
+        },
+      },
+    ],
+  },
 })

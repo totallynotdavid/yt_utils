@@ -9,7 +9,7 @@
     "fmt": "oxfmt packages",
     "fmt:check": "oxfmt --check packages",
     "typecheck": "bun run --workspaces typecheck",
-    "test": "bun run --workspaces test",
+    "test": "vitest run --passWithNoTests",
     "check": "bun run typecheck && bun run lint && bun run fmt:check && bun run test"
   },
   "devDependencies": {
