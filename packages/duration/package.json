@@ -1,0 +1,15 @@
+{
+  "name": "@ytutils/duration",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fetch and format YouTube video duration",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests test/**/*.test.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}

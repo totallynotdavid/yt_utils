@@ -1,0 +1,9 @@
+# dot environment variables
+.env
+
+# Dependencies
+node_modules
+
+# Build files
+coverage
+media

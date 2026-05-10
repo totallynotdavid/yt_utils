@@ -1,0 +1,20 @@
+{
+  "plugins": ["typescript"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error"
+  },
+  "rules": {
+    "eslint/no-inline-comments": "off",
+    "eslint/max-lines-per-function": "off",
+    "eslint/require-unicode-regexp": "off",
+    "eslint/require-await": "off",
+    "eslint/no-else-return": "off",
+    "eslint/radix": "off",
+    "unicorn/no-array-sort": "off",
+    "unicorn/consistent-function-scoping": "off",
+    "unicorn/no-array-callback-reference": "off",
+    "unicorn/prefer-string-slice": "off",
+    "unicorn/prefer-top-level-await": "off"
+  }
+}

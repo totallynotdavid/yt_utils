@@ -1,0 +1,24 @@
+{
+  "name": "yt_utils",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "oxlint packages",
+    "fmt": "oxfmt packages",
+    "fmt:check": "oxfmt --check packages",
+    "typecheck": "bun run --workspaces typecheck",
+    "test": "bun run --workspaces test",
+    "check": "bun run typecheck && bun run lint && bun run fmt:check && bun run test"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "oxfmt": "^0.48.0",
+    "oxlint": "^1.58.0",
+    "puppeteer": "^24.43.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.0.8"
+  },
+  "packageManager": "bun@1.3.13"
+}

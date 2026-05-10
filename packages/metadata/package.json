@@ -1,0 +1,15 @@
+{
+  "name": "@ytutils/metadata",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fetch YouTube content metadata from URLs or search queries",
+  "type": "module",
+  "main": "src/youtubeMetadata.js",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests test/**/*.test.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}

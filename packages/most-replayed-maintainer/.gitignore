@@ -1,0 +1,7 @@
+# artifacts for 
+# debugging and diagnostics
+*.svg
+*.json
+*.csv
+*.png
+*.html

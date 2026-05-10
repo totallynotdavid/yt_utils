@@ -1,0 +1,12 @@
+{
+  "name": "@ytutils/video-processor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "yt-dlp and ffmpeg based download and processing pipeline",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests test/**/*.test.ts"
+  }
+}
