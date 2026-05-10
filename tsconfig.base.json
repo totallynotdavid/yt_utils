@@ -1,18 +1,16 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@ytutils/core": ["packages/core/src/index.ts"],
-      "@ytutils/metadata": ["packages/metadata/src/index.ts"],
-      "@ytutils/duration": ["packages/duration/src/index.ts"],
-      "@ytutils/most-replayed": ["packages/most-replayed/src/index.ts"],
-      "@ytutils/most-replayed-maintainer": ["packages/most-replayed-maintainer/src/types.ts"],
-      "@ytutils/video-processor": ["packages/video-processor/src/index.js"]
+      "@ytutils/core": ["./packages/core/src/index.ts"],
+      "@ytutils/metadata": ["./packages/metadata/src/index.ts"],
+      "@ytutils/duration": ["./packages/duration/src/index.ts"],
+      "@ytutils/most-replayed": ["./packages/most-replayed/src/index.ts"],
+      "@ytutils/most-replayed-maintainer": ["./packages/most-replayed-maintainer/src/types.ts"],
+      "@ytutils/video-processor": ["./packages/video-processor/src/index.ts"]
     },
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "ignoreDeprecations": "6.0",
     "strict": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
