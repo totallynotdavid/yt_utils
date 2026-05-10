@@ -46,6 +46,7 @@ describe('getMetadata', () => {
               channelTitle: 'Rick Astley',
               thumbnails: { high: { url: 'https://img.test/high.jpg' } },
             },
+            contentDetails: { duration: 'PT3M33S' },
             statistics: { viewCount: '42', likeCount: '10' },
           },
         ],
@@ -60,6 +61,7 @@ describe('getMetadata', () => {
     expect(result).toEqual({
       mediaId: 'dQw4w9WgXcQ',
       mediaType: 'video',
+      durationIso: 'PT3M33S',
       title: 'Never Gonna Give You Up',
       channelTitle: 'Rick Astley',
       thumbnailUrl: 'https://img.test/high.jpg',

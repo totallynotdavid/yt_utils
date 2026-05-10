@@ -49,7 +49,7 @@ export async function getVideoDetails(
   videoId: string
 ): Promise<Partial<MetadataResult>> {
   const url =
-    `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${encodeURIComponent(videoId)}` +
+    `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${encodeURIComponent(videoId)}` +
     `&key=${encodeURIComponent(apiKey)}`
 
   const response = await httpClient.request({ url, timeoutMs: 15_000 })
@@ -65,6 +65,7 @@ export async function getVideoDetails(
   }
 
   return {
+    durationIso: item.contentDetails?.duration,
     title: item.snippet?.title,
     channelTitle: item.snippet?.channelTitle,
     thumbnailUrl: pickThumbnail(item.snippet),
