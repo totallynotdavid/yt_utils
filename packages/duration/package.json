@@ -4,12 +4,13 @@
   "private": true,
   "description": "Fetch and format YouTube video duration",
   "type": "module",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests test/**/*.test.ts"
+    "test": "vitest run --passWithNoTests --config ../../vitest.config.ts"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "@ytutils/core": "workspace:*",
+    "@ytutils/metadata": "workspace:*"
   }
 }

@@ -6,6 +6,6 @@
   "main": "src/index.ts",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests test/**/*.test.ts"
+    "test": "vitest run --passWithNoTests --config ../../vitest.config.ts"
   }
 }
