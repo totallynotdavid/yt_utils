@@ -18,7 +18,6 @@
     "prepublishOnly": "bun run typecheck && bun run test && bun run build"
   },
   "dependencies": {
-    "@ytutils/core": "workspace:*",
-    "dotenv": "^16.4.5"
+    "@ytutils/core": "workspace:*"
   }
 }
