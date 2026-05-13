@@ -23,20 +23,16 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install
-        run: bun install --frozen-lockfile
+      - run: bun install --frozen-lockfile
 
       - name: Resolve version from tag
         id: version
@@ -64,8 +60,7 @@ jobs:
             exit 1
           fi
 
-      - name: Check
-        run: bun run check
+      - run: bun run check
 
       - name: Publish package
         run: npm publish --provenance --access public
