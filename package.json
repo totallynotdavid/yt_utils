@@ -13,7 +13,7 @@
   "devDependencies": {
     "@types/node": "^25.7.0",
     "bunup": "^0.16.31",
-    "oxfmt": "^0.49.0",
+    "oxfmt": "^0.52.0",
     "oxlint": "^1.64.0",
     "puppeteer": "^24.43.1",
     "typescript": "^6.0.3",
