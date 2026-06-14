@@ -16,7 +16,7 @@ export type ProcessVideoDeps = {
 }
 
 const defaultDeps: ProcessVideoDeps = {
-  runner: new ShellCommandRunner(),
+  runner: ShellCommandRunner,
   ensureDirectoryExists,
   downloadWithYtDlp,
   convertWithFfmpeg,
@@ -32,30 +32,28 @@ export async function processVideo(
 
   await deps.ensureDirectoryExists(outputDir)
 
-  const downloadedPathRaw = await deps.downloadWithYtDlp({ ...normalized, outputDir }, deps.runner)
+  const downloadedPath = resolve(
+    await deps.downloadWithYtDlp({ ...normalized, outputDir }, deps.runner)
+  )
 
-  const downloadedPath = resolve(downloadedPathRaw)
+  const currentFormat = extname(downloadedPath).slice(1)
   const artifacts: ProcessVideoResult['artifacts'] = [
     {
       kind: normalized.kind,
-      format: extname(downloadedPath).slice(1),
+      format: currentFormat,
       path: downloadedPath,
     },
   ]
 
-  const currentFormat = extname(downloadedPath).slice(1)
   if (currentFormat !== normalized.format) {
-    const convertedPathRaw = await deps.convertWithFfmpeg(
-      downloadedPath,
-      normalized.format,
-      normalized.kind,
-      deps.runner
+    const convertedPath = resolve(
+      await deps.convertWithFfmpeg(downloadedPath, normalized.format, normalized.kind, deps.runner)
     )
 
     artifacts.push({
       kind: normalized.kind,
       format: normalized.format,
-      path: resolve(convertedPathRaw),
+      path: convertedPath,
     })
   }
 

@@ -35,3 +35,36 @@ describe('processVideo', () => {
     expect(result.artifacts[1]?.format).toBe('mp4')
   })
 })
+
+describe('CommandRunner shell injection', () => {
+  it('passes shell metacharacters in outputDir as a single argv element, not split by a shell', async () => {
+    const captured: string[][] = []
+    const maliciousOutputDir = '$(touch /tmp/yt-utils-pwn)/x'
+
+    const realDownloadWithYtDlp = (await import('../src/infra/ytdlp.js')).downloadWithYtDlp
+
+    await processVideo(
+      { videoId: 'dQw4w9WgXcQ', format: 'opus', outputDir: maliciousOutputDir },
+      undefined,
+      {
+        runner: {
+          run: async (argv) => {
+            captured.push(argv)
+            return {
+              stdout: '/tmp-out/dQw4w9WgXcQ.opus\n',
+              stderr: '',
+            }
+          },
+        },
+        ensureDirectoryExists: async () => {},
+        downloadWithYtDlp: realDownloadWithYtDlp,
+        convertWithFfmpeg: async () => '/tmp-out/dQw4w9WgXcQ.opus',
+      }
+    )
+
+    expect(captured).toHaveLength(1)
+    const argv = captured[0]!
+    const matches = argv.filter((a) => a.includes(maliciousOutputDir))
+    expect(matches).toHaveLength(1)
+  })
+})

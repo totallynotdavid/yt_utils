@@ -1,9 +1,17 @@
 import { parseVideoId, YtUtilsError } from '@ytutils/core'
 
 import { defaultVideoProcessorConfig } from './config'
-import type { MediaKind, ProcessVideoRequest, Quality, VideoProcessorConfig } from './types'
+import {
+  AUDIO_FORMATS,
+  OUTPUT_FORMATS,
+  type MediaKind,
+  type ProcessVideoRequest,
+  type Quality,
+  type VideoProcessorConfig,
+} from './types'
 
-const AUDIO_FORMATS = new Set(['opus', 'mp3', 'm4a', 'wav', 'flac'])
+const AUDIO_FORMAT_SET = new Set<string>(AUDIO_FORMATS)
+const OUTPUT_FORMAT_SET = new Set<string>(OUTPUT_FORMATS)
 
 export type NormalizedProcessVideoRequest = {
   videoId: string
@@ -38,7 +46,11 @@ export function normalizeProcessVideoRequest(
   assertTimeRange(request.startTimeSec, request.endTimeSec)
 
   const format = request.format ?? config.defaults.audioFormat
-  const kind: MediaKind = AUDIO_FORMATS.has(format) ? 'audio' : 'video'
+  if (!OUTPUT_FORMAT_SET.has(format)) {
+    throw new YtUtilsError('INVALID_INPUT', `Unsupported format: ${format}`)
+  }
+
+  const kind: MediaKind = AUDIO_FORMAT_SET.has(format) ? 'audio' : 'video'
   const quality =
     request.quality ??
     (kind === 'audio' ? config.defaults.audioQuality : config.defaults.videoQuality)

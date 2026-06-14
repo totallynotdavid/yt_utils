@@ -2,10 +2,6 @@ import { extname } from 'node:path'
 
 import type { CommandRunner } from './command'
 
-function quote(value: string): string {
-  return `"${value.replaceAll('"', '\\"')}"`
-}
-
 export async function convertWithFfmpeg(
   inputPath: string,
   targetFormat: string,
@@ -17,9 +13,9 @@ export async function convertWithFfmpeg(
     `.${targetFormat}`
   )
 
-  const codecFlags = kind === 'audio' ? '-c:a libopus' : '-c:v libx264 -c:a aac'
+  const codecFlags = kind === 'audio' ? ['-c:a', 'libopus'] : ['-c:v', 'libx264', '-c:a', 'aac']
 
-  const command = `ffmpeg -y -i ${quote(inputPath)} ${codecFlags} ${quote(outputPath)}`
-  await runner.run(command)
+  const argv = ['ffmpeg', '-y', '-i', inputPath, ...codecFlags, outputPath]
+  await runner.run(argv)
   return outputPath
 }

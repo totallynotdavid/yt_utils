@@ -5,34 +5,13 @@ import { YtUtilsError } from '@ytutils/core'
 import type { NormalizedProcessVideoRequest } from '../domain/normalize'
 import type { CommandRunner } from './command'
 
-function quote(value: string): string {
-  return `"${value.replaceAll('"', '\\"')}"`
-}
-
 function buildVideoFormat(sizeLimitMb?: number, quality?: string): string {
   if (sizeLimitMb) {
-    const sizeLimitBytes = `${sizeLimitMb}M`
-    return `bv*[ext=mp4][filesize<=${sizeLimitBytes}]+ba[ext=m4a]/b[ext=mp4][filesize<=${sizeLimitBytes}]`
+    const sizeLimitWithSuffix = `${sizeLimitMb}M`
+    return `bv*[ext=mp4][filesize<=${sizeLimitWithSuffix}]+ba[ext=m4a]/b[ext=mp4][filesize<=${sizeLimitWithSuffix}]`
   }
 
   return quality === 'worst' ? 'worstvideo*+worstaudio/worst' : 'bestvideo*+bestaudio/best'
-}
-
-function extractOutputPath(stdout: string): string | null {
-  const patterns = [
-    /\[Merger\] Merging formats into "([^"]+)"/u,
-    /\[ExtractAudio\] Destination: ([^\n\r]+)/u,
-    /Destination: ([^\n\r]+)/u,
-    /\[download\] ([^\n\r]+) has already been downloaded/u,
-  ]
-
-  for (const pattern of patterns) {
-    const match = stdout.match(pattern)
-    const raw = match?.[1]?.trim()
-    if (raw) return raw
-  }
-
-  return null
 }
 
 export async function downloadWithYtDlp(
@@ -41,30 +20,30 @@ export async function downloadWithYtDlp(
 ): Promise<string> {
   const url = `https://www.youtube.com/watch?v=${request.videoId}`
   const outputTemplate = `${request.videoId}.%(ext)s`
-  const outputDir = quote(request.outputDir)
-  const quotedTemplate = quote(outputTemplate)
 
-  const commandParts = ['yt-dlp -v']
+  const argv = ['yt-dlp', '--print', 'after_move:filepath']
 
   if (request.kind === 'video') {
-    commandParts.push(`-f ${quote(buildVideoFormat(request.videoSizeMb, request.quality))}`)
+    argv.push('-f', buildVideoFormat(request.videoSizeMb, request.quality))
   } else {
     const audioQuality = request.quality === 'worst' ? 'worstaudio' : 'bestaudio'
-    commandParts.push(`-f ${audioQuality} --extract-audio --audio-format ${request.format}`)
+    argv.push('-f', audioQuality, '--extract-audio', '--audio-format', request.format)
   }
 
   if (request.startTimeSec !== undefined || request.endTimeSec !== undefined) {
     const start = request.startTimeSec ?? ''
     const end = request.endTimeSec ?? 'inf'
-    commandParts.push(`--download-sections ${quote(`*${start}-${end}`)}`)
+    argv.push('--download-sections', `*${start}-${end}`)
   }
 
-  commandParts.push(quote(url))
-  commandParts.push(`-P ${outputDir}`)
-  commandParts.push(`-o ${quotedTemplate}`)
+  argv.push(url, '-P', request.outputDir, '-o', outputTemplate)
 
-  const { stdout, stderr } = await runner.run(commandParts.join(' '))
-  const found = extractOutputPath(stdout)
+  const { stdout, stderr } = await runner.run(argv)
+  const found = stdout
+    .split('\n')
+    .map((line) => line.trim())
+    .find((line) => line.length > 0)
+
   if (!found) {
     if (stderr.includes('Video unavailable')) {
       throw new YtUtilsError('NOT_FOUND', 'YouTube video is unavailable')
