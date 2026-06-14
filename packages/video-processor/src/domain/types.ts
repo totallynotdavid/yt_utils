@@ -6,8 +6,7 @@ export type Quality = 'best' | 'worst'
 export type VideoSize = 'small' | 'medium' | 'large'
 
 export const AUDIO_FORMATS: readonly AudioFormat[] = ['opus', 'mp3', 'm4a', 'wav', 'flac']
-export const VIDEO_FORMATS: readonly VideoFormat[] = ['mp4', 'webm', 'mkv']
-export const OUTPUT_FORMATS: readonly OutputFormat[] = [...AUDIO_FORMATS, ...VIDEO_FORMATS]
+export const OUTPUT_FORMATS: readonly OutputFormat[] = [...AUDIO_FORMATS, 'mp4', 'webm', 'mkv']
 
 export type ProcessVideoRequest = {
   videoId: string
