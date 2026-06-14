@@ -1,23 +1,14 @@
 import type { ReplayMarker, ReplaySegment } from '../types'
-import { parsePathToPoints, stitchPaths } from './svg_path_parser'
+import { extractPathDAttributes, parsePathToPoints, stitchPaths } from './svg_path_parser'
 import { localProminence, movingAverage, smooth } from './svg_smoothing'
 
 export function markersFromSvg(svg: string, durationSec: number): ReplayMarker[] {
   if (!Number.isFinite(durationSec) || durationSec <= 1) return []
 
-  const pathData = svg.match(/<path\b[^>]*\bd=(['"])(.*?)\1/gi) ?? []
+  const pathData = extractPathDAttributes(svg)
   if (pathData.length === 0) return []
 
-  const pointGroups = pathData
-    .map((pathTag) => {
-      const match = pathTag.match(/\bd=(['"])(.*?)\1/i)
-      return match?.[2]
-    })
-    .filter(
-      (pathSegment): pathSegment is string =>
-        typeof pathSegment === 'string' && pathSegment.length > 0
-    )
-    .map(parsePathToPoints)
+  const pointGroups = pathData.map(parsePathToPoints)
   const points = stitchPaths(pointGroups).filter(
     (p) => Number.isFinite(p.x) && Number.isFinite(p.y)
   )

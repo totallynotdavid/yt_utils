@@ -1,4 +1,4 @@
-type Point = { x: number; y: number }
+export type Point = { x: number; y: number }
 
 const COMMAND_ARGC: Record<string, number> = {
   A: 7,
