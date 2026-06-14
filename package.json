@@ -15,7 +15,6 @@
     "bunup": "^0.16.32",
     "oxfmt": "^0.54.0",
     "oxlint": "^1.69.0",
-    "puppeteer": "^24.43.1",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"
   },
