@@ -5,6 +5,10 @@ on:
     tags:
       - 'duration-v*'
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   publish:
     uses: ./.github/workflows/publish-package.yml
