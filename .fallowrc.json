@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": [
+    "packages/*/src/index.ts",
+    "packages/most-replayed-maintainer/src/*.ts",
+    "packages/*/test/**/*.test.ts",
+    "packages/*/bunup.config.ts",
+    "vitest.config.ts"
+  ],
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "packages/most-replayed-maintainer/**"
+  ],
+  "ignoreDependencies": [
+    "bunup",
+    "oxfmt",
+    "oxlint",
+    "vitest",
+    "typescript",
+    "@types/node"
+  ],
+  "rules": {
+    "unused-exports": "warn",
+    "unused-files": "warn",
+    "unused-dependencies": "error",
+    "unused-dev-dependencies": "warn",
+    "unused-types": "warn",
+    "unresolved-imports": "error",
+    "unlisted-dependencies": "error",
+    "circular-dependencies": "error",
+    "duplicate-exports": "warn",
+    "private-type-leaks": "warn"
+  }
+}

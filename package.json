@@ -8,11 +8,14 @@
     "fmt:check": "oxfmt --check packages",
     "typecheck": "bun run --workspaces typecheck",
     "test": "vitest run --passWithNoTests",
-    "check": "bun run typecheck && bun run lint && bun run fmt:check && bun run test"
+    "fallow": "fallow",
+    "fallow:check": "fallow --only dead-code",
+    "check": "bun run typecheck && bun run lint && bun run fmt:check && bun run test && bun run fallow:check"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
     "bunup": "^0.16.32",
+    "fallow": "^2.96.0",
     "oxfmt": "^0.54.0",
     "oxlint": "^1.69.0",
     "typescript": "^6.0.3",
