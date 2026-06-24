@@ -16,7 +16,7 @@
     "@types/node": "^25.9.3",
     "bunup": "^0.16.32",
     "fallow": "^2.96.0",
-    "oxfmt": "^0.54.0",
+    "oxfmt": "^0.56.0",
     "oxlint": "^1.69.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"
