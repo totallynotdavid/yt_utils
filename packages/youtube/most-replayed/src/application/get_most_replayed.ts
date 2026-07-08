@@ -36,13 +36,14 @@ function buildResultFromMarkers(
 export async function getMostReplayed(
   videoId: string,
   options?: GetMostReplayedOptions,
-  deps: MostReplayedDeps = defaultDeps
+  deps?: MostReplayedDeps
 ): Promise<MostReplayedResult> {
   assertVideoId(videoId)
   const normalized = normalizeGetMostReplayedOptions(options)
+  const resolvedDeps = deps ?? defaultDeps
 
   if (normalized.strategy === 'svg') {
-    const svgResult = await deps.getSvgMarkersForVideo(videoId)
+    const svgResult = await resolvedDeps.getSvgMarkersForVideo(videoId)
     if (svgResult.markers.length === 0) {
       throw new YtUtilsError('NOT_FOUND', 'No replay markers could be parsed from SVG heatmap')
     }
@@ -56,7 +57,10 @@ export async function getMostReplayed(
     )
   }
 
-  const jsonMarkers = await deps.getJsonMarkersForVideo(videoId)
+  const jsonMarkers =
+    deps === undefined
+      ? await getJsonMarkersForVideo(videoId, normalized.httpClient)
+      : await deps.getJsonMarkersForVideo(videoId)
   if (jsonMarkers.length > 0) {
     return buildResultFromMarkers(
       videoId,
@@ -78,7 +82,7 @@ export async function getMostReplayed(
     )
   }
 
-  const svgResult = await deps.getSvgMarkersForVideo(videoId)
+  const svgResult = await resolvedDeps.getSvgMarkersForVideo(videoId)
   if (svgResult.markers.length === 0) {
     throw new YtUtilsError('NOT_FOUND', 'No replay markers could be parsed from SVG heatmap')
   }

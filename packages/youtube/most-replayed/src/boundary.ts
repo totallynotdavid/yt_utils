@@ -6,6 +6,7 @@ export type NormalizedGetMostReplayedOptions = {
   parts: number
   strategy: ExtractionStrategy
   allowSvgFallback: boolean
+  httpClient: GetMostReplayedOptions['httpClient']
 }
 
 export function assertVideoId(videoId: string): void {
@@ -29,5 +30,6 @@ export function normalizeGetMostReplayedOptions(
     parts,
     strategy,
     allowSvgFallback: options?.allowSvgFallback ?? false,
+    httpClient: options?.httpClient,
   }
 }
