@@ -17,14 +17,13 @@ import {
 let dir: string
 let sourcePath: string
 
-const hasMediaBinaries = [defaultBinaries.ffmpeg, defaultBinaries.ffprobe].every(
-  (binary) =>
-    (
-      spawnSync(binary, ['--version'], { stdio: 'ignore' }).error as
-        | NodeJS.ErrnoException
-        | undefined
-    )?.code !== 'ENOENT'
-)
+const hasMediaBinaries = [defaultBinaries.ffmpeg, defaultBinaries.ffprobe].every((binary) => {
+  // oxlint-disable-next-line typescript/no-unnecessary-type-assertion
+  const err = spawnSync(binary, ['--version'], { stdio: 'ignore' }).error as
+    | NodeJS.ErrnoException
+    | undefined
+  return err?.code !== 'ENOENT'
+})
 
 // Run a rejecting call and assert it surfaced the expected typed VideoError.
 async function expectVideoError(work: Promise<unknown>, code: VideoErrorCode): Promise<void> {

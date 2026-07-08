@@ -38,7 +38,7 @@ describe('downloadWithYtDlp', () => {
     const result = await downloadWithYtDlp(baseRequest, runner)
 
     expect(result).toBe('/tmp/out/dQw4w9WgXcQ.opus')
-    const argv = calls[0]!
+    const argv = calls[0]
     expect(argv[0]).toBe('yt-dlp')
     expect(argv).toContain('--print')
     expect(argv[argv.indexOf('--print') + 1]).toBe('after_move:filepath')
@@ -58,7 +58,7 @@ describe('downloadWithYtDlp', () => {
     const { runner, calls } = captureRunner('/tmp/out/dQw4w9WgXcQ.opus\n')
     await downloadWithYtDlp({ ...baseRequest, quality: 'worst' }, runner)
 
-    const argv = calls[0]!
+    const argv = calls[0]
     expect(argv[argv.indexOf('-f') + 1]).toBe('worstaudio')
   })
 
@@ -69,7 +69,7 @@ describe('downloadWithYtDlp', () => {
       runner
     )
 
-    const argv = calls[0]!
+    const argv = calls[0]
     expect(argv).not.toContain('--extract-audio')
     const format = argv[argv.indexOf('-f') + 1]
     expect(format).toBe('bv*[ext=mp4][filesize<=50M]+ba[ext=m4a]/b[ext=mp4][filesize<=50M]')
@@ -82,7 +82,7 @@ describe('downloadWithYtDlp', () => {
       runner
     )
 
-    const argv = calls[0]!
+    const argv = calls[0]
     expect(argv[argv.indexOf('-f') + 1]).toBe('worstvideo*+worstaudio/worst')
   })
 
@@ -90,7 +90,7 @@ describe('downloadWithYtDlp', () => {
     const { runner, calls } = captureRunner('/tmp/out/dQw4w9WgXcQ.opus\n')
     await downloadWithYtDlp({ ...baseRequest, startTimeSec: 10, endTimeSec: 20 }, runner)
 
-    const argv = calls[0]!
+    const argv = calls[0]
     expect(argv[argv.indexOf('--download-sections') + 1]).toBe('*10-20')
   })
 
@@ -98,7 +98,7 @@ describe('downloadWithYtDlp', () => {
     const { runner, calls } = captureRunner('/tmp/out/dQw4w9WgXcQ.opus\n')
     await downloadWithYtDlp({ ...baseRequest, endTimeSec: 30 }, runner)
 
-    const argv = calls[0]!
+    const argv = calls[0]
     expect(argv[argv.indexOf('--download-sections') + 1]).toBe('*-30')
   })
 

@@ -1,4 +1,4 @@
-import type { Browser, Page } from 'puppeteer'
+import type { Page } from 'puppeteer'
 
 import { extractDurationFromProgressAria } from './duration'
 
@@ -40,7 +40,7 @@ export async function withYoutubePage<T>(
     throw new MissingPuppeteerError()
   }
 
-  const browser = (await puppeteerModule.default.launch({ headless: true })) as Browser
+  const browser = await puppeteerModule.default.launch({ headless: true })
 
   try {
     const page = await browser.newPage()

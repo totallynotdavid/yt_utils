@@ -26,6 +26,7 @@ const PROGRESS_TEMPLATE =
 function detectJsRuntime(): string | null {
   for (const runtime of ['deno', 'node', 'bun', 'quickjs']) {
     if (
+      // oxlint-disable-next-line typescript/no-unnecessary-type-assertion
       (
         spawnSync(runtime, ['--version'], { stdio: 'ignore' }).error as
           | NodeJS.ErrnoException
@@ -75,7 +76,7 @@ export async function fetchVideo(url: string, opts: FetchOptions): Promise<Fetch
   if (opts.cookies !== undefined && opts.cookies !== '') args.push('--cookies', opts.cookies)
   args.push(url)
 
-  const proc = spawn(args[0]!, args.slice(1), {
+  const proc = spawn(args[0], args.slice(1), {
     stdio: ['ignore', 'pipe', 'pipe'],
     signal: opts.signal,
   })
@@ -103,8 +104,8 @@ export async function fetchVideo(url: string, opts: FetchOptions): Promise<Fetch
   }
 
   await Promise.all([
-    eachLine(proc.stdout!, handle),
-    eachLine(proc.stderr!, (line) => {
+    eachLine(proc.stdout, handle),
+    eachLine(proc.stderr, (line) => {
       handle(line)
       if (!line.startsWith('PIPE|')) errorLines.push(line)
     }),

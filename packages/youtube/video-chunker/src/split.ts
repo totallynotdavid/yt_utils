@@ -82,13 +82,13 @@ async function runFfmpeg(run: RunFfmpeg): Promise<void> {
     proc.once('close', resolve)
   })
 
-  await eachLine(proc.stdout!, (line) => {
+  await eachLine(proc.stdout, (line) => {
     if (!line.startsWith(OUT_TIME)) return
     const processedSeconds = Number(line.slice(OUT_TIME.length)) / 1_000_000
     if (Number.isFinite(processedSeconds)) run.onProgress?.({ processedSeconds })
   })
 
-  const stderr = await readText(proc.stderr!)
+  const stderr = await readText(proc.stderr)
   if ((await exited) !== 0) {
     throw new VideoError('SPLIT_FAILED', `ffmpeg failed:\n${stderr.slice(-2000)}`)
   }
@@ -117,7 +117,7 @@ async function collectChunks(
 ): Promise<Chunk[]> {
   const chunks: Chunk[] = []
   for (let index = 0; index < filenames.length; index++) {
-    const path = join(outDir, filenames[index]!)
+    const path = join(outDir, filenames[index])
     const chunk: Chunk = {
       index,
       path,

@@ -198,7 +198,7 @@ export async function evaluateFallbackReliabilityFromSnapshot(
     meta.videoId ?? 'unknown',
     jsonMarkers,
     svg,
-    Number(meta.durationSec ?? 0),
+    meta.durationSec ?? 0,
     parts
   )
 }

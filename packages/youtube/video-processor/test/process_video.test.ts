@@ -63,7 +63,7 @@ describe('CommandRunner shell injection', () => {
     )
 
     expect(captured).toHaveLength(1)
-    const argv = captured[0]!
+    const argv = captured[0]
     const matches = argv.filter((a) => a.includes(maliciousOutputDir))
     expect(matches).toHaveLength(1)
   })

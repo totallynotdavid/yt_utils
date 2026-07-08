@@ -32,7 +32,7 @@ export async function readDurationSeconds(path: string, ffprobe: string): Promis
     proc.once('error', reject)
     proc.once('close', resolve)
   })
-  const out = await readText(proc.stdout!)
+  const out = await readText(proc.stdout)
   if ((await exited) !== 0) {
     throw new VideoError('PROBE_FAILED', `ffprobe could not read ${path}`)
   }

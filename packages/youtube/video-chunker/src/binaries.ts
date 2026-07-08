@@ -32,7 +32,10 @@ export function verifyBinaries(
   for (const role of roles) {
     const command = binaries[role]
     const result = spawnSync(command, ['--version'], { stdio: 'ignore' })
-    if ((result.error as NodeJS.ErrnoException | undefined)?.code === 'ENOENT') {
+    if (
+      // oxlint-disable-next-line typescript/no-unnecessary-type-assertion
+      (result.error as NodeJS.ErrnoException | undefined)?.code === 'ENOENT'
+    ) {
       throw new VideoError('MISSING_BINARY', `${command} not found on PATH (needed for ${role})`)
     }
   }
