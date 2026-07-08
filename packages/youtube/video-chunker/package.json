@@ -1,0 +1,20 @@
+{
+  "name": "@ytutils/video-chunker",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Download YouTube videos and split them into fixed-length chunks",
+  "files": [
+    "dist",
+    "readme.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "build": "bunup",
+    "prepublishOnly": "bun run typecheck && bun run test && bun run build"
+  }
+}

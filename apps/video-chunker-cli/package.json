@@ -1,0 +1,24 @@
+{
+  "name": "@ytutils/video-chunker-cli",
+  "version": "0.1.0",
+  "private": false,
+  "description": "CLI for downloading YouTube videos and splitting them into fixed-length chunks",
+  "bin": {
+    "video-chunker": "dist/bin.js"
+  },
+  "files": [
+    "dist",
+    "readme.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "build": "bunup",
+    "prepublishOnly": "bun run typecheck && bun run test && bun run build"
+  },
+  "dependencies": {
+    "@ytutils/video-chunker": "workspace:*"
+  }
+}
