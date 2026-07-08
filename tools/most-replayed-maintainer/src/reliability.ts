@@ -1,15 +1,14 @@
 import { readFile, readdir } from 'node:fs/promises'
 import { join } from 'node:path'
+import { parseVideoId } from '@ytutils/core'
 import {
   extractJsonMarkersCurrentFromHtml,
   markersFromJsonUnknown,
 } from '../../../packages/youtube/most-replayed/src/json'
-import { assertVideoId } from '../../../packages/youtube/most-replayed/src/boundary'
 import {
-  extractSvgAndDuration,
-  readPageHtml,
+  extractHeatmapSvgFromPage,
   withYoutubePage,
-} from '../../../packages/youtube/most-replayed/src/youtube_page'
+} from '../../../packages/youtube/most-replayed/src/capture/browser_heatmap'
 import {
   markersFromSvg,
   maxDurationFromMarkers,
@@ -162,12 +161,12 @@ export async function evaluateFallbackReliability(
   videoId: string,
   parts = 3
 ): Promise<FallbackReliabilityResult> {
-  assertVideoId(videoId)
+  parseVideoId(videoId)
 
   return withYoutubePage(videoId, async (page) => {
-    const html = await readPageHtml(page)
+    const html = await page.content()
     const jsonMarkers = extractJsonMarkersCurrentFromHtml(html)
-    const { svg, durationSec } = await extractSvgAndDuration(page)
+    const { svg, durationSec } = await extractHeatmapSvgFromPage(page)
 
     return evaluateFallbackReliabilityFromArtifacts(
       videoId,
@@ -237,7 +236,7 @@ export async function evaluateFallbackReliabilityFromSavedArtifacts(
   if (!artifactsDir || typeof artifactsDir !== 'string') {
     throw new Error('artifactsDir must be a non-empty string')
   }
-  assertVideoId(videoId)
+  parseVideoId(videoId)
 
   const jsonRaw = await readFile(join(artifactsDir, `${videoId}.markers.json`), 'utf8')
   const svg = await readFile(join(artifactsDir, `${videoId}.heatmap.svg`), 'utf8')

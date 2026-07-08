@@ -1,12 +1,11 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { parseVideoId } from '@ytutils/core'
 import { extractJsonMarkersCurrentFromHtml } from '../../../packages/youtube/most-replayed/src/json'
-import { assertVideoId } from '../../../packages/youtube/most-replayed/src/boundary'
 import {
-  extractSvgAndDuration,
-  readPageHtml,
+  extractHeatmapSvgFromPage,
   withYoutubePage,
-} from '../../../packages/youtube/most-replayed/src/youtube_page'
+} from '../../../packages/youtube/most-replayed/src/capture/browser_heatmap'
 import {
   markersFromSvg,
   maxDurationFromMarkers,
@@ -18,7 +17,7 @@ export async function captureHeatmapDiagnostics(
   videoId: string,
   outDir: string
 ): Promise<DiagnosticsResult> {
-  assertVideoId(videoId)
+  parseVideoId(videoId)
   if (!outDir || typeof outDir !== 'string') {
     throw new Error('outDir must be a non-empty string')
   }
@@ -26,9 +25,9 @@ export async function captureHeatmapDiagnostics(
   return withYoutubePage(videoId, async (page) => {
     await mkdir(outDir, { recursive: true })
 
-    const html = await readPageHtml(page)
+    const html = await page.content()
     const jsonMarkers = extractJsonMarkersCurrentFromHtml(html)
-    const { svg, durationSec } = await extractSvgAndDuration(page)
+    const { svg, durationSec } = await extractHeatmapSvgFromPage(page)
     const safeDuration = durationSec ?? maxDurationFromMarkers(jsonMarkers)
     const svgMarkers = markersFromSvg(svg, Math.max(0, safeDuration))
 

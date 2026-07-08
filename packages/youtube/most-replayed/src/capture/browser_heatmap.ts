@@ -1,6 +1,6 @@
-import { FetchHttpClient, type HttpClient } from '@ytutils/core'
 import type { Browser, Page } from 'puppeteer'
-import { extractDurationFromProgressAria } from './svg'
+
+import { extractDurationFromProgressAria } from './duration'
 
 export class MissingPuppeteerError extends Error {
   constructor() {
@@ -16,6 +16,17 @@ async function navigateToVideo(page: Page, videoId: string): Promise<void> {
     waitUntil: ['domcontentloaded', 'networkidle2'],
     timeout: 45000,
   })
+}
+
+async function hoverProgressBar(page: Page): Promise<void> {
+  const progressBarHandle = await page.$('.ytp-progress-bar')
+  const progressBarBox = await progressBarHandle?.boundingBox()
+  if (!progressBarBox) return
+
+  const y = progressBarBox.y + progressBarBox.height / 2
+  await page.mouse.move(progressBarBox.x + progressBarBox.width * 0.25, y)
+  await page.mouse.move(progressBarBox.x + progressBarBox.width * 0.5, y)
+  await page.mouse.move(progressBarBox.x + progressBarBox.width * 0.75, y)
 }
 
 export async function withYoutubePage<T>(
@@ -40,63 +51,22 @@ export async function withYoutubePage<T>(
   }
 }
 
-export async function readPageHtml(page: Page): Promise<string> {
-  return page.content()
-}
-
-export type FetchHtmlOptions = {
-  httpClient?: HttpClient
-}
-
-export async function fetchWatchHtml(
-  videoId: string,
-  options: FetchHtmlOptions = {}
-): Promise<string> {
-  const http = options.httpClient ?? new FetchHttpClient()
-  const response = await http.request({
-    url: `https://www.youtube.com/watch?v=${videoId}`,
-    headers: {
-      'user-agent':
-        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-      'accept-language': 'en-US,en;q=0.9',
-    },
-    timeoutMs: 30_000,
-  })
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch YouTube watch page: HTTP ${response.status}`)
-  }
-
-  return response.text
-}
-
-export async function extractSvgAndDuration(
+export async function extractHeatmapSvgFromPage(
   page: Page
 ): Promise<{ svg: string; durationSec: number | null }> {
   await page.waitForSelector('.ytp-progress-bar', { timeout: 15000 })
-
-  const progressBarHandle = await page.$('.ytp-progress-bar')
-  const progressBarBox = await progressBarHandle?.boundingBox()
-  if (progressBarBox) {
-    const y = progressBarBox.y + progressBarBox.height / 2
-    await page.mouse.move(progressBarBox.x + progressBarBox.width * 0.25, y)
-    await page.mouse.move(progressBarBox.x + progressBarBox.width * 0.5, y)
-    await page.mouse.move(progressBarBox.x + progressBarBox.width * 0.75, y)
-  }
-
+  await hoverProgressBar(page)
   await page.waitForSelector('.ytp-heat-map-svg, .ytp-heat-map-path', { timeout: 15000 })
 
   const data = await page.evaluate(() => {
-    const doc = document
-
-    const svgNodes = Array.from(doc.querySelectorAll('.ytp-heat-map-svg'))
-    const pathNodes = Array.from(doc.querySelectorAll('.ytp-heat-map-path'))
+    const svgNodes = Array.from(document.querySelectorAll('.ytp-heat-map-svg'))
+    const pathNodes = Array.from(document.querySelectorAll('.ytp-heat-map-path'))
     const mergedSvgFromNodes = svgNodes.map((n) => n.outerHTML).join('\n')
     const mergedSvg =
       mergedSvgFromNodes.length > 0
         ? mergedSvgFromNodes
         : `<svg>${pathNodes.map((n) => n.outerHTML).join('\n')}</svg>`
-    const progressBar = doc.querySelector('.ytp-progress-bar')
+    const progressBar = document.querySelector('.ytp-progress-bar')
     const ariaMax = progressBar?.getAttribute('aria-valuemax') ?? null
     return { mergedSvg, ariaMax }
   })

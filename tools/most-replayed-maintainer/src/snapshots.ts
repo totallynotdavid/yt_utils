@@ -1,26 +1,25 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { parseVideoId } from '@ytutils/core'
 import {
   compareMarkerSets,
   extractJsonMarkersCurrentFromHtml,
   extractJsonMarkersFastFromHtml,
 } from '../../../packages/youtube/most-replayed/src/json'
-import { assertVideoId } from '../../../packages/youtube/most-replayed/src/boundary'
 import {
-  extractSvgAndDuration,
-  readPageHtml,
+  extractHeatmapSvgFromPage,
   withYoutubePage,
-} from '../../../packages/youtube/most-replayed/src/youtube_page'
+} from '../../../packages/youtube/most-replayed/src/capture/browser_heatmap'
 import { maxDurationFromMarkers } from '../../../packages/youtube/most-replayed/src/svg'
 import type { JsonExtractorComparisonResult, SnapshotCaptureResult } from './types'
 
 export async function compareJsonExtractorsFromSingleResponse(
   videoId: string
 ): Promise<JsonExtractorComparisonResult> {
-  assertVideoId(videoId)
+  parseVideoId(videoId)
 
   return withYoutubePage(videoId, async (page) => {
-    const html = await readPageHtml(page)
+    const html = await page.content()
     const currentMarkers = extractJsonMarkersCurrentFromHtml(html)
     const fastMarkers = extractJsonMarkersFastFromHtml(html)
     const compared = compareMarkerSets(currentMarkers, fastMarkers)
@@ -38,14 +37,14 @@ export async function captureRefinementSnapshot(
   videoId: string,
   outDir: string
 ): Promise<SnapshotCaptureResult> {
-  assertVideoId(videoId)
+  parseVideoId(videoId)
   if (!outDir || typeof outDir !== 'string') {
     throw new Error('outDir must be a non-empty string')
   }
 
   return withYoutubePage(videoId, async (page) => {
-    const html = await readPageHtml(page)
-    const { svg, durationSec } = await extractSvgAndDuration(page)
+    const html = await page.content()
+    const { svg, durationSec } = await extractHeatmapSvgFromPage(page)
     const jsonMarkers = extractJsonMarkersCurrentFromHtml(html)
     const resolvedDuration = durationSec ?? maxDurationFromMarkers(jsonMarkers)
 
