@@ -27,6 +27,7 @@ flowchart TD
   - `manifestFilenames` (reads filenames from manifest)
   - `collectChunks` (probes each chunk for `durationSeconds` and `sizeBytes`)
 - `ChunkResult` contains `{ source, chunks, outDir }`.
+
 </details>
 
 ## run()
