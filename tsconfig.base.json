@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "paths": {
-      "@ytutils/core": ["./packages/core/src/index.ts"],
-      "@ytutils/metadata": ["./packages/metadata/src/index.ts"],
-      "@ytutils/duration": ["./packages/duration/src/index.ts"],
-      "@ytutils/most-replayed": ["./packages/most-replayed/src/index.ts"],
-      "@ytutils/most-replayed-maintainer": ["./packages/most-replayed-maintainer/src/types.ts"],
-      "@ytutils/video-processor": ["./packages/video-processor/src/index.ts"]
+      "@ytutils/core": ["./packages/shared/core/src/index.ts"],
+      "@ytutils/metadata": ["./packages/youtube/metadata/src/index.ts"],
+      "@ytutils/duration": ["./packages/youtube/duration/src/index.ts"],
+      "@ytutils/most-replayed": ["./packages/youtube/most-replayed/src/index.ts"],
+      "@ytutils/video-processor": ["./packages/youtube/video-processor/src/index.ts"],
+      "@ytutils/video-chunker": ["./packages/youtube/video-chunker/src/index.ts"],
+      "@ytutils/most-replayed-maintainer": ["./tools/most-replayed-maintainer/src/types.ts"]
     },
     "target": "ES2022",
     "module": "ESNext",

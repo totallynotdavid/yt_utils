@@ -1,11 +1,11 @@
 {
   "name": "yt_utils",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": ["packages/*/*", "apps/*", "tools/*"],
   "scripts": {
-    "lint": "oxlint packages",
-    "fmt": "oxfmt packages",
-    "fmt:check": "oxfmt --check packages",
+    "lint": "oxlint packages apps tools",
+    "fmt": "oxfmt packages apps tools",
+    "fmt:check": "oxfmt --check packages apps tools",
     "typecheck": "bun run --workspaces typecheck",
     "test": "vitest run --passWithNoTests",
     "fallow": "fallow",

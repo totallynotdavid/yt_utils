@@ -13,6 +13,6 @@ jobs:
   publish:
     uses: ./.github/workflows/publish-package.yml
     with:
-      package_dir: packages/most-replayed
+      package_dir: packages/youtube/most-replayed
       package_name: '@ytutils/most-replayed'
       tag_prefix: 'most-replayed-v'

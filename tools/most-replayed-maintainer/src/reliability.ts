@@ -3,20 +3,20 @@ import { join } from 'node:path'
 import {
   extractJsonMarkersCurrentFromHtml,
   markersFromJsonUnknown,
-} from '../../most-replayed/src/json'
-import { assertVideoId } from '../../most-replayed/src/boundary'
+} from '../../../packages/youtube/most-replayed/src/json'
+import { assertVideoId } from '../../../packages/youtube/most-replayed/src/boundary'
 import {
   extractSvgAndDuration,
   readPageHtml,
   withYoutubePage,
-} from '../../most-replayed/src/youtube_page'
+} from '../../../packages/youtube/most-replayed/src/youtube_page'
 import {
   markersFromSvg,
   maxDurationFromMarkers,
   topSegmentsFromMarkers,
-} from '../../most-replayed/src/svg'
+} from '../../../packages/youtube/most-replayed/src/svg'
 import { summarizeMarkerComparison } from './compare_heatmap'
-import type { ReplayMarker } from '../../most-replayed/src/types'
+import type { ReplayMarker } from '../../../packages/youtube/most-replayed/src/types'
 import type {
   BatchFallbackReliabilityResult,
   FallbackReliabilityResult,

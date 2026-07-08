@@ -13,6 +13,6 @@ jobs:
   publish:
     uses: ./.github/workflows/publish-package.yml
     with:
-      package_dir: packages/core
+      package_dir: packages/shared/core
       package_name: '@ytutils/core'
       tag_prefix: 'core-v'

@@ -4,14 +4,14 @@ import {
   compareMarkerSets,
   extractJsonMarkersCurrentFromHtml,
   extractJsonMarkersFastFromHtml,
-} from '../../most-replayed/src/json'
-import { assertVideoId } from '../../most-replayed/src/boundary'
+} from '../../../packages/youtube/most-replayed/src/json'
+import { assertVideoId } from '../../../packages/youtube/most-replayed/src/boundary'
 import {
   extractSvgAndDuration,
   readPageHtml,
   withYoutubePage,
-} from '../../most-replayed/src/youtube_page'
-import { maxDurationFromMarkers } from '../../most-replayed/src/svg'
+} from '../../../packages/youtube/most-replayed/src/youtube_page'
+import { maxDurationFromMarkers } from '../../../packages/youtube/most-replayed/src/svg'
 import type { JsonExtractorComparisonResult, SnapshotCaptureResult } from './types'
 
 export async function compareJsonExtractorsFromSingleResponse(

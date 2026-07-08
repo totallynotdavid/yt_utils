@@ -1,13 +1,16 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { extractJsonMarkersCurrentFromHtml } from '../../most-replayed/src/json'
-import { assertVideoId } from '../../most-replayed/src/boundary'
+import { extractJsonMarkersCurrentFromHtml } from '../../../packages/youtube/most-replayed/src/json'
+import { assertVideoId } from '../../../packages/youtube/most-replayed/src/boundary'
 import {
   extractSvgAndDuration,
   readPageHtml,
   withYoutubePage,
-} from '../../most-replayed/src/youtube_page'
-import { markersFromSvg, maxDurationFromMarkers } from '../../most-replayed/src/svg'
+} from '../../../packages/youtube/most-replayed/src/youtube_page'
+import {
+  markersFromSvg,
+  maxDurationFromMarkers,
+} from '../../../packages/youtube/most-replayed/src/svg'
 import { saveHeatmapComparisonArtifacts } from './compare_heatmap'
 import type { DiagnosticsResult } from './types'
 

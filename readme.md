@@ -2,6 +2,13 @@
 
 Monorepo for YouTube utility packages.
 
+## Layout
+
+- `packages/shared/*`: shared libraries used across package families.
+- `packages/youtube/*`: published YouTube-focused libraries.
+- `apps/*`: runnable packages such as CLIs.
+- `tools/*`: private internal automation.
+
 ## Tooling
 
 - Bun workspaces

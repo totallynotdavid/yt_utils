@@ -13,6 +13,6 @@ jobs:
   publish:
     uses: ./.github/workflows/publish-package.yml
     with:
-      package_dir: packages/duration
+      package_dir: packages/youtube/duration
       package_name: '@ytutils/duration'
       tag_prefix: 'duration-v'

@@ -1,16 +1,19 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
   "entry": [
-    "packages/*/src/index.ts",
-    "packages/*/test/**/*.test.ts",
-    "packages/*/bunup.config.ts",
+    "packages/*/*/src/index.ts",
+    "packages/*/*/test/**/*.test.ts",
+    "packages/*/*/bunup.config.ts",
+    "apps/*/src/bin.ts",
+    "apps/*/test/**/*.test.ts",
+    "apps/*/bunup.config.ts",
     "vitest.config.ts"
   ],
   "ignorePatterns": [
     "**/node_modules/**",
     "**/dist/**",
     "**/coverage/**",
-    "packages/most-replayed-maintainer/**"
+    "tools/most-replayed-maintainer/**"
   ],
   "ignoreDependencies": [
     "bunup",
@@ -25,7 +28,9 @@
     "@ytutils/metadata",
     "@ytutils/duration",
     "@ytutils/most-replayed",
-    "@ytutils/video-processor"
+    "@ytutils/video-processor",
+    "@ytutils/video-chunker",
+    "@ytutils/video-chunker-cli"
   ],
   "rules": {
     "unused-exports": "warn",

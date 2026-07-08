@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type { ReplayMarker } from '../../most-replayed/src/types'
+import type { ReplayMarker } from '../../../packages/youtube/most-replayed/src/types'
 
 type ComparisonPoint = {
   second: number
