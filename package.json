@@ -9,7 +9,7 @@
     "typecheck": "bun run --workspaces typecheck",
     "test": "vitest run --passWithNoTests",
     "fallow": "fallow",
-    "fallow:check": "fallow --only dead-code",
+    "fallow:check": "fallow audit",
     "check": "bun run typecheck && bun run lint && bun run fmt:check && bun run test && bun run fallow:check"
   },
   "devDependencies": {
