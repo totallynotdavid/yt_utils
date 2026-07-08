@@ -1,12 +1,12 @@
-import { parseArgs } from "node:util";
+import { parseArgs } from 'node:util'
 
-import { run, VideoError, type ChunkRequest } from "@ytutils/video-chunker";
+import { run, VideoError, type ChunkRequest } from '@ytutils/video-chunker'
 
-import { parseDuration } from "./duration.ts";
-import { createReporter } from "./reporter.ts";
+import { parseDuration } from './duration'
+import { createReporter } from './reporter'
 
-const DEFAULT_CHUNK_SECONDS = 60 * 60;
-const DEFAULT_OUT_DIR = "./output";
+const DEFAULT_CHUNK_SECONDS = 60 * 60
+const DEFAULT_OUT_DIR = './output'
 
 const HELP = `split a YouTube video into fixed-length chunks
 
@@ -19,33 +19,33 @@ options:
   --cookies <file>  Netscape-format cookies file for yt-dlp (login/age-gated)
   --keep-source     keep the full download after splitting
   -h, --help        show this help
-`;
+`
 
 export async function main(): Promise<void> {
   const { values, positionals } = parseArgs({
-    args: Bun.argv.slice(2),
+    args: process.argv.slice(2),
     allowPositionals: true,
     options: {
-      chunk: { type: "string" },
-      out: { type: "string" },
-      cookies: { type: "string" },
-      "keep-source": { type: "boolean" },
-      help: { type: "boolean", short: "h" },
+      chunk: { type: 'string' },
+      out: { type: 'string' },
+      cookies: { type: 'string' },
+      'keep-source': { type: 'boolean' },
+      help: { type: 'boolean', short: 'h' },
     },
-  });
+  })
 
-  const url = positionals[0];
+  const url = positionals[0]
   if (values.help === true || url === undefined) {
-    process.stdout.write(HELP);
-    process.exit(values.help === true ? 0 : 1);
+    process.stdout.write(HELP)
+    process.exit(values.help === true ? 0 : 1)
   }
 
-  let chunkSeconds: number;
+  let chunkSeconds: number
   try {
-    chunkSeconds = values.chunk === undefined ? DEFAULT_CHUNK_SECONDS : parseDuration(values.chunk);
+    chunkSeconds = values.chunk === undefined ? DEFAULT_CHUNK_SECONDS : parseDuration(values.chunk)
   } catch (error) {
-    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-    process.exit(1);
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`)
+    process.exit(1)
   }
 
   const request: ChunkRequest = {
@@ -53,20 +53,20 @@ export async function main(): Promise<void> {
     chunkSeconds,
     outDir: values.out ?? DEFAULT_OUT_DIR,
     cookies: values.cookies,
-    keepSource: values["keep-source"] ?? false,
-  };
+    keepSource: values['keep-source'] ?? false,
+  }
 
-  const reporter = createReporter(chunkSeconds);
+  const reporter = createReporter(chunkSeconds)
 
   try {
-    const result = await run(request, { onProgress: reporter.onProgress });
-    reporter.finish(result);
+    const result = await run(request, { onProgress: reporter.onProgress })
+    reporter.finish(result)
   } catch (error) {
     const message =
       error instanceof VideoError
         ? `Error [${error.code}]: ${error.message}`
-        : `Error: ${error instanceof Error ? error.message : String(error)}`;
-    reporter.fail(message);
-    process.exit(1);
+        : `Error: ${error instanceof Error ? error.message : String(error)}`
+    reporter.fail(message)
+    process.exit(1)
   }
 }

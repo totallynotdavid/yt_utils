@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
-import { main } from "./main.ts";
+#!/usr/bin/env node
+import { main } from './main'
 
-await main();
+await main()
