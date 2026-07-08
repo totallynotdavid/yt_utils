@@ -1,4 +1,4 @@
-import { parseVideoId, YtUtilsError } from '@ytutils/core'
+import { YtUtilsError } from '@ytutils/core'
 
 import type { ExtractionStrategy, GetMostReplayedOptions } from './types'
 
@@ -7,10 +7,6 @@ export type NormalizedGetMostReplayedOptions = {
   strategy: ExtractionStrategy
   allowSvgFallback: boolean
   httpClient: GetMostReplayedOptions['httpClient']
-}
-
-export function assertVideoId(videoId: string): void {
-  parseVideoId(videoId)
 }
 
 export function normalizeGetMostReplayedOptions(

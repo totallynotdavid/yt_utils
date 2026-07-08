@@ -1,6 +1,6 @@
-import { YtUtilsError } from '@ytutils/core'
+import { parseVideoId, YtUtilsError } from '@ytutils/core'
 
-import { assertVideoId, normalizeGetMostReplayedOptions } from '../boundary'
+import { normalizeGetMostReplayedOptions } from '../boundary'
 import { getJsonMarkersForVideo } from '../infra/json_strategy'
 import { getSvgMarkersForVideo } from '../infra/svg_strategy'
 import { maxDurationFromMarkers, topSegmentsFromMarkers } from '../svg'
@@ -33,28 +33,26 @@ function buildResultFromMarkers(
   }
 }
 
+async function buildSvgResult(videoId: string, parts: number, deps: MostReplayedDeps) {
+  const svgResult = await deps.getSvgMarkersForVideo(videoId)
+  if (svgResult.markers.length === 0) {
+    throw new YtUtilsError('NOT_FOUND', 'No replay markers could be parsed from SVG heatmap')
+  }
+
+  return buildResultFromMarkers(videoId, 'svg', svgResult.markers, svgResult.durationSec, parts)
+}
+
 export async function getMostReplayed(
   videoId: string,
   options?: GetMostReplayedOptions,
   deps?: MostReplayedDeps
 ): Promise<MostReplayedResult> {
-  assertVideoId(videoId)
+  parseVideoId(videoId)
   const normalized = normalizeGetMostReplayedOptions(options)
   const resolvedDeps = deps ?? defaultDeps
 
   if (normalized.strategy === 'svg') {
-    const svgResult = await resolvedDeps.getSvgMarkersForVideo(videoId)
-    if (svgResult.markers.length === 0) {
-      throw new YtUtilsError('NOT_FOUND', 'No replay markers could be parsed from SVG heatmap')
-    }
-
-    return buildResultFromMarkers(
-      videoId,
-      'svg',
-      svgResult.markers,
-      svgResult.durationSec,
-      normalized.parts
-    )
+    return buildSvgResult(videoId, normalized.parts, resolvedDeps)
   }
 
   const jsonMarkers =
@@ -82,16 +80,5 @@ export async function getMostReplayed(
     )
   }
 
-  const svgResult = await resolvedDeps.getSvgMarkersForVideo(videoId)
-  if (svgResult.markers.length === 0) {
-    throw new YtUtilsError('NOT_FOUND', 'No replay markers could be parsed from SVG heatmap')
-  }
-
-  return buildResultFromMarkers(
-    videoId,
-    'svg',
-    svgResult.markers,
-    svgResult.durationSec,
-    normalized.parts
-  )
+  return buildSvgResult(videoId, normalized.parts, resolvedDeps)
 }
