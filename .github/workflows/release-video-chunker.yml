@@ -1,0 +1,18 @@
+name: release-video-chunker
+
+on:
+  push:
+    tags:
+      - 'video-chunker-v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish-package.yml
+    with:
+      package_dir: packages/youtube/video-chunker
+      package_name: '@ytutils/video-chunker'
+      tag_prefix: 'video-chunker-v'
