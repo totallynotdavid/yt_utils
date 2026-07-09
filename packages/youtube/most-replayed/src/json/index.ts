@@ -4,6 +4,6 @@ export { extractScriptTextsFromHtml } from './html_scripts'
 export {
   extractCurrentJsonMarkerPayloadsFromHtml,
   extractFastJsonMarkerPayloadsFromHtml,
-  findMarkersListNode,
+  isRecord,
 } from './json_payloads'
 export { markersFromJsonUnknown } from './json_markers'

@@ -45,7 +45,7 @@ export async function withYoutubePage<T>(
   try {
     const page = await browser.newPage()
     await navigateToVideo(page, videoId)
-    return execute(page)
+    return await execute(page)
   } finally {
     await browser.close()
   }

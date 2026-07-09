@@ -1,7 +1,7 @@
 import { extractScriptTextsFromHtml } from './html_scripts'
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === 'object'
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object'
 }
 
 type JsonScanState = {
@@ -37,7 +37,7 @@ function extractJsonObjectAt(text: string, startIndex: number): string | null {
   return null
 }
 
-function parseJsonObject(text: string): unknown | null {
+function parseJsonObject(text: string): unknown {
   try {
     return JSON.parse(text)
   } catch {
@@ -63,7 +63,7 @@ function findMarkersListNode(value: unknown): unknown {
   return null
 }
 
-function frameworkPayloadFromScript(text: string): unknown | null {
+function frameworkPayloadFromScript(text: string): unknown {
   if (!text.includes('frameworkUpdates')) return null
 
   const match = text.match(/\{.*\}/s)
@@ -73,7 +73,7 @@ function frameworkPayloadFromScript(text: string): unknown | null {
   return isRecord(parsed) ? parsed['frameworkUpdates'] : null
 }
 
-function fastPayloadFromScript(text: string): unknown | null {
+function fastPayloadFromScript(text: string): unknown {
   const markerKeyIndex = text.indexOf('macroMarkersListEntity')
   if (markerKeyIndex < 0) return null
 
@@ -98,5 +98,3 @@ export function extractCurrentJsonMarkerPayloadsFromHtml(html: string): unknown[
 export function extractFastJsonMarkerPayloadsFromHtml(html: string): unknown[] {
   return extractScriptTextsFromHtml(html).map(fastPayloadFromScript).filter(Boolean)
 }
-
-export { findMarkersListNode }

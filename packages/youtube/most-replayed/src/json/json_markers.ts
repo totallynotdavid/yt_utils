@@ -1,19 +1,20 @@
 import type { ReplayMarker } from '../types'
 
+import { isRecord } from './json_payloads'
+
 export function markersFromJsonUnknown(input: unknown): ReplayMarker[] {
-  if (!input || typeof input !== 'object') return []
+  if (!isRecord(input)) return []
 
-  const maybe = input as { markers?: unknown[] }
-  if (!Array.isArray(maybe.markers)) return []
+  const markers = input['markers']
+  if (!Array.isArray(markers)) return []
 
-  return maybe.markers
-    .map((marker) => {
-      if (!marker || typeof marker !== 'object') return null
-      const item = marker as Record<string, unknown>
-      const startMillis = Number(item['startMillis'])
-      const durationMillis = Number(item['durationMillis'])
+  return markers
+    .map((marker): ReplayMarker | null => {
+      if (!isRecord(marker)) return null
+      const startMillis = Number(marker['startMillis'])
+      const durationMillis = Number(marker['durationMillis'])
       const intensityScoreNormalized = Number(
-        item['intensityScoreNormalized'] ?? item['heatMarkerIntensityScoreNormalized']
+        marker['intensityScoreNormalized'] ?? marker['heatMarkerIntensityScoreNormalized']
       )
       if (
         !Number.isFinite(startMillis) ||
