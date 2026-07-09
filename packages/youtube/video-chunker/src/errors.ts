@@ -14,3 +14,7 @@ export class VideoError extends Error {
     this.name = 'VideoError'
   }
 }
+
+export function isErrnoException(value: unknown): value is NodeJS.ErrnoException {
+  return value instanceof Error
+}

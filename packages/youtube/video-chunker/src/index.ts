@@ -15,7 +15,7 @@ export type { SplitOptions } from './split'
 // Shared types and error contracts.
 export type { ChunkRequest, ChunkResult, Source, FetchedSource, MediaInfo, Chunk } from './media'
 export type { RunEvent, OnProgress, FetchProgress, SplitProgress } from './events'
-export { VideoError } from './errors'
+export { VideoError, isErrnoException } from './errors'
 export type { VideoErrorCode } from './errors'
 export { defaultBinaries, resolveBinaries, verifyBinaries } from './binaries'
 export type { Binaries } from './binaries'

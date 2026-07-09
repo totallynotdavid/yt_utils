@@ -3,7 +3,7 @@
 
 import { spawnSync } from 'node:child_process'
 
-import { VideoError } from './errors'
+import { VideoError, isErrnoException } from './errors'
 
 export interface Binaries {
   ffmpeg: string
@@ -32,10 +32,7 @@ export function verifyBinaries(
   for (const role of roles) {
     const command = binaries[role]
     const result = spawnSync(command, ['--version'], { stdio: 'ignore' })
-    if (
-      // oxlint-disable-next-line typescript/no-unnecessary-type-assertion
-      (result.error as NodeJS.ErrnoException | undefined)?.code === 'ENOENT'
-    ) {
+    if (isErrnoException(result.error) && result.error.code === 'ENOENT') {
       throw new VideoError('MISSING_BINARY', `${command} not found on PATH (needed for ${role})`)
     }
   }

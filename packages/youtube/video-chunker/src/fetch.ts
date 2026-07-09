@@ -4,7 +4,7 @@ import { spawn, spawnSync } from 'node:child_process'
 
 import type { Binaries } from './binaries'
 import { resolveBinaries, verifyBinaries } from './binaries'
-import { VideoError } from './errors'
+import { VideoError, isErrnoException } from './errors'
 import type { FetchProgress } from './events'
 import { eachLine } from './lines'
 import type { FetchedSource } from './media'
@@ -25,14 +25,8 @@ const PROGRESS_TEMPLATE =
 // let it fetch the EJS solver scripts from GitHub if they are not bundled.
 function detectJsRuntime(): string | null {
   for (const runtime of ['deno', 'node', 'bun', 'quickjs']) {
-    if (
-      // oxlint-disable-next-line typescript/no-unnecessary-type-assertion
-      (
-        spawnSync(runtime, ['--version'], { stdio: 'ignore' }).error as
-          | NodeJS.ErrnoException
-          | undefined
-      )?.code !== 'ENOENT'
-    ) {
+    const err = spawnSync(runtime, ['--version'], { stdio: 'ignore' }).error
+    if (!isErrnoException(err) || err.code !== 'ENOENT') {
       return runtime
     }
   }
