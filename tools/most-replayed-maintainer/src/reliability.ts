@@ -15,6 +15,7 @@ import {
   topSegmentsFromMarkers,
 } from '../../../packages/youtube/most-replayed/src/svg'
 import { summarizeMarkerComparison } from './compare_heatmap'
+import { parseSnapshotMeta } from './snapshots'
 import type { ReplayMarker } from '../../../packages/youtube/most-replayed/src/types'
 import type {
   BatchFallbackReliabilityResult,
@@ -188,10 +189,7 @@ export async function evaluateFallbackReliabilityFromSnapshot(
 
   const html = await readFile(join(snapshotDir, 'page.html'), 'utf8')
   const svg = await readFile(join(snapshotDir, 'heatmap.svg'), 'utf8')
-  const meta = JSON.parse(await readFile(join(snapshotDir, 'meta.json'), 'utf8')) as {
-    videoId?: string
-    durationSec?: number
-  }
+  const meta = parseSnapshotMeta(await readFile(join(snapshotDir, 'meta.json'), 'utf8'))
 
   const jsonMarkers = extractJsonMarkersCurrentFromHtml(html)
   return evaluateFallbackReliabilityFromArtifacts(

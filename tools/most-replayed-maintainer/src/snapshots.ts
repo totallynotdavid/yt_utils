@@ -5,6 +5,7 @@ import {
   compareMarkerSets,
   extractJsonMarkersCurrentFromHtml,
   extractJsonMarkersFastFromHtml,
+  isRecord,
 } from '../../../packages/youtube/most-replayed/src/json'
 import {
   extractHeatmapSvgFromPage,
@@ -12,6 +13,28 @@ import {
 } from '../../../packages/youtube/most-replayed/src/capture/browser_heatmap'
 import { maxDurationFromMarkers } from '../../../packages/youtube/most-replayed/src/svg'
 import type { JsonExtractorComparisonResult, SnapshotCaptureResult } from './types'
+
+export type SnapshotMeta = {
+  videoId?: string
+  durationSec?: number
+}
+
+export function parseSnapshotMeta(text: string): SnapshotMeta {
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(text)
+  } catch {
+    return {}
+  }
+  if (!isRecord(parsed)) return {}
+  return {
+    videoId: typeof parsed['videoId'] === 'string' ? parsed['videoId'] : undefined,
+    durationSec:
+      typeof parsed['durationSec'] === 'number' && Number.isFinite(parsed['durationSec'])
+        ? parsed['durationSec']
+        : undefined,
+  }
+}
 
 export async function compareJsonExtractorsFromSingleResponse(
   videoId: string
@@ -115,9 +138,7 @@ export async function compareJsonExtractorsFromSnapshot(
   }
 
   const html = await readFile(join(snapshotDir, 'page.html'), 'utf8')
-  const meta = JSON.parse(await readFile(join(snapshotDir, 'meta.json'), 'utf8')) as {
-    videoId?: string
-  }
+  const meta = parseSnapshotMeta(await readFile(join(snapshotDir, 'meta.json'), 'utf8'))
 
   const currentMarkers = extractJsonMarkersCurrentFromHtml(html)
   const fastMarkers = extractJsonMarkersFastFromHtml(html)
