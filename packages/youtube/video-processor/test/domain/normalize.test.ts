@@ -76,6 +76,9 @@ describe('normalizeProcessVideoRequest', () => {
     expect(() =>
       normalizeProcessVideoRequest({
         videoId: 'dQw4w9WgXcQ',
+        // The test feeds a format string the type system rejects on purpose,
+        // to confirm the runtime guard fires.
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion
         format: 'xyz' as unknown as 'opus',
       })
     ).toThrow(YtUtilsError)
