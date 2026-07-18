@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@ytutils/core": "workspace:*",
-    "puppeteer": "^25.1.0"
+    "puppeteer": "^25.3.0"
   }
 }
