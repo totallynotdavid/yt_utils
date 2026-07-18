@@ -1,7 +1,8 @@
-# artifacts for 
-# debugging and diagnostics
+# runtime artifacts produced by snapshot/diagnostics tooling
 *.svg
-*.json
 *.csv
 *.png
 *.html
+*.markers.json
+*.comparison.json
+meta.json
