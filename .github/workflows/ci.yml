@@ -38,12 +38,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Pin to 3.4.2 to avoid the 3.5.0+ Action verifier bug
-      # (fallow-rs/fallow#1905); bump when upstream ships a fix.
-      - uses: fallow-rs/fallow@v2.104.0
+      - uses: fallow-rs/fallow@v3
         with:
           command: audit
-          version: 3.4.2
           sarif: false
           comment: false
           review-comments: false
