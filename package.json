@@ -11,7 +11,8 @@
     "test": "vitest run --passWithNoTests",
     "fallow": "fallow",
     "fallow:check": "fallow audit",
-    "check": "bun run typecheck && bun run lint && bun run fmt:check && bun run test && bun run fallow:check"
+    "check:code": "bun run typecheck && bun run lint && bun run fmt:check && bun run test",
+    "check": "bun run check:code && bun run fallow:check"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
