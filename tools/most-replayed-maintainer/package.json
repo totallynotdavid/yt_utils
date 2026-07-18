@@ -1,0 +1,14 @@
+{
+  "name": "@ytutils/most-replayed-maintainer",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Internal tooling for the most-replayed package: snapshot capture, JSON/SVG comparison, reliability gate.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@ytutils/core": "workspace:*",
+    "puppeteer": "^25.1.0"
+  }
+}
