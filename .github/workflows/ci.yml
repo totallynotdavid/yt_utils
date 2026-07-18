@@ -15,9 +15,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
 
       - run: bun install --frozen-lockfile
 
-      - run: bun run check
+      - name: Run checks
+        run: bun run check
+        env:
+          FALLOW_AUDIT_BASE: ${{ github.event.pull_request.base.sha || 'master' }}
