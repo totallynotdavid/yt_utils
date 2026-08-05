@@ -21,10 +21,10 @@
     "@ytutils/core": "workspace:*"
   },
   "devDependencies": {
-    "puppeteer": "^25.3.0"
+    "puppeteer": "^25.4.0"
   },
   "peerDependencies": {
-    "puppeteer": "^25.3.0"
+    "puppeteer": "^25.4.0"
   },
   "peerDependenciesMeta": {
     "puppeteer": {
