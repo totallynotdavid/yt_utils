@@ -1,53 +1,60 @@
-[![npm](https://img.shields.io/npm/v/yt_duration.svg)](https://www.npmjs.com/package/yt_duration) ![yt_duration 0.0.1](https://img.shields.io/badge/yt_duration-0.0.1-brightgreen.svg)
+# @ytutils/duration
 
-# YouTube Video Length Fetcher
-
-## Introduction
-
-This package provides a simple and efficient way to fetch the length of a YouTube video in seconds, minutes, or hours. It utilizes the YouTube Data API to retrieve video information and parse the duration from ISO 8601 format to the desired time unit.
-
-## Features
-
-- Fetch the duration of any public YouTube video.
-- Convert duration to seconds, minutes, or hours.
-- Lightweight and easy-to-use.
+Fetch the length of a YouTube video, in the unit you need: seconds, minutes,
+hours, or a `MM:SS` / `HH:MM:SS` clock string.
 
 ## Installation
 
-To install the package, run the following command in your project directory:
-
 ```bash
-npm install yt_duration
+npm install @ytutils/duration
 ```
+
+## Authentication
+
+`getDuration` resolves the video through the YouTube Data API, which requires
+an API key. Pass it via `options.apiKey` or set the `YOUTUBE_API_KEY`
+environment variable (a `.env` file is picked up automatically under Bun). Get
+a key from the [Google Cloud console](https://console.cloud.google.com/apis/library/youtube.googleapis.com).
 
 ## Usage
 
-Here's how you can use this package in your project:
+```ts
+import { getDuration } from '@ytutils/duration'
 
-```javascript
-const { getVideoLength } = require('yt_duration')
+// Default format is 'clock'
+await getDuration('dQw4w9WgXcQ') // '03:33'
+await getDuration('https://www.youtube.com/watch?v=dQw4w9WgXcQ') // '03:33'
 
-// Fetch video length in seconds
-getVideoLength('your-video-id').then((durationInSeconds) => {
-  console.log('Duration in seconds:', durationInSeconds)
-})
-
-// Fetch video length in minutes
-getVideoLength('your-video-id', 'minutes').then((durationInMinutes) => {
-  console.log('Duration in minutes:', durationInMinutes)
-})
-
-// Fetch video length in hours
-getVideoLength('your-video-id', 'hours').then((durationInHours) => {
-  console.log('Duration in hours:', durationInHours)
-})
+// Or pick the unit
+await getDuration('dQw4w9WgXcQ', { format: 'seconds' }) // 213
+await getDuration('dQw4w9WgXcQ', { format: 'minutes' }) // 3.55
+await getDuration('dQw4w9WgXcQ', { format: 'hours' }) // 0.059166...
 ```
 
-## API Reference
+## API reference
 
-### `getVideoLength(videoId, format)`
+### `getDuration(input, options?)`
 
-Fetches the length of a YouTube video.
+- `input` (string): an 11-character video id, a `youtube.com/watch?v=` URL, or
+  a `youtu.be/` URL.
+- `options.format` (`'seconds' | 'minutes' | 'hours' | 'clock'`, default
+  `'clock'`): which unit to return. `'clock'` returns `MM:SS`, or `HH:MM:SS`
+  for videos of an hour or longer.
+- `options.apiKey` (string, optional): YouTube Data API key; falls back to the
+  `YOUTUBE_API_KEY` environment variable.
+- `options.httpClient` (optional): injectable HTTP client implementing the
+  `HttpClient` interface from `@ytutils/core`, for testing or proxying.
 
-- `videoId` (String): The unique identifier for the YouTube video.
-- `format` (String): The format for the returned duration ('seconds', 'minutes', 'hours'). Default is 'seconds'.
+Returns the duration in the requested format: a `number` for
+`seconds`/`minutes`/`hours`, a `string` for `clock`.
+
+## Errors
+
+Errors are `YtUtilsError` from `@ytutils/core` with a `code`:
+
+| code             | when                                                                    |
+| ---------------- | ----------------------------------------------------------------------- |
+| `INVALID_INPUT`  | not a video id/URL, the input is not a video, or the API key is missing |
+| `NOT_FOUND`      | the video has no duration metadata                                      |
+| `UPSTREAM_ERROR` | the YouTube Data API returned a non-2xx response                        |
+| `PARSING_ERROR`  | the API returned an unparseable ISO-8601 duration                       |

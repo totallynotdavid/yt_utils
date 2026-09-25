@@ -3,6 +3,25 @@
   "version": "0.1.0",
   "private": false,
   "description": "Download YouTube videos and split them into fixed-length chunks",
+  "keywords": [
+    "chunks",
+    "ffmpeg",
+    "split",
+    "video",
+    "youtube",
+    "ytdlp"
+  ],
+  "homepage": "https://github.com/totallynotdavid/yt_utils/tree/master/packages/youtube/video-chunker#readme",
+  "bugs": {
+    "url": "https://github.com/totallynotdavid/yt_utils/issues"
+  },
+  "license": "MIT",
+  "author": "David Duran",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/totallynotdavid/yt_utils.git",
+    "directory": "packages/youtube/video-chunker"
+  },
   "files": [
     "dist",
     "readme.md",
@@ -11,10 +30,19 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run --root ../../..",
     "build": "bunup",
     "prepublishOnly": "bun run typecheck && bun run test && bun run build"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

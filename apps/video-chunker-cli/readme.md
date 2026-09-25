@@ -1,4 +1,4 @@
-# video-chunker
+# @ytutils/video-chunker-cli
 
 Downloads a YouTube video and splits it into fixed-length chunks (default: 1
 hour) without re-encoding. Prints progress and a final chunk summary.
@@ -98,11 +98,11 @@ apps/video-chunker-cli/src/          main.ts reporter.ts format.ts duration.ts .
 ## Development
 
 ```sh
-bun test          # run unit + integration tests
-bun run typecheck # tsc --noEmit across both packages
-bun run lint      # oxlint        (oxlint.config.ts)
-bun run fmt       # oxfmt         (oxfmt.config.ts), fmt:check to verify only
+bun run test      # vitest across the workspace (run from the repo root)
+bun run typecheck # tsc --noEmit across all packages
+bun run lint      # oxlint        (.oxlintrc.json)
+bun run fmt       # oxfmt         (.oxfmtrc.json), fmt:check to verify only
 ```
 
-Lint and format are [oxlint] / [oxfmt], configured in TypeScript
-(`oxlint.config.ts`, `oxfmt.config.ts`).
+Lint and format are [oxlint] / [oxfmt], configured in JSON
+(`.oxlintrc.json`, `.oxfmtrc.json`).

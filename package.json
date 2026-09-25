@@ -3,16 +3,18 @@
   "private": true,
   "workspaces": ["packages/*/*", "apps/*", "tools/*"],
   "scripts": {
-    "lint": "oxlint packages apps tools",
-    "lint:type-aware": "oxlint packages apps tools",
-    "fmt": "oxfmt packages apps tools",
-    "fmt:check": "oxfmt --check packages apps tools",
-    "typecheck": "bun run --workspaces typecheck",
-    "test": "vitest run --passWithNoTests",
+    "lint": "oxlint packages apps tools scripts",
+    "fmt": "oxfmt packages apps tools scripts",
+    "fmt:check": "oxfmt --check packages apps tools scripts",
+    "typecheck": "tsc -p tsconfig.json --noEmit && bun run --workspaces typecheck",
+    "test": "vitest run",
+    "build:all": "for d in packages/*/* apps/*; do (cd \"$d\" && bun run build) || exit 1; done",
+    "license:sync": "for d in packages/*/* apps/*; do cp LICENSE \"$d/LICENSE\"; done",
+    "license:check": "for d in packages/*/* apps/*; do cmp -s LICENSE \"$d/LICENSE\" || { echo \"LICENSE out of sync in $d (fix: bun run license:sync)\"; exit 1; }; done",
     "fallow": "fallow",
     "fallow:check": "fallow audit",
     "check:code": "bun run typecheck && bun run lint && bun run fmt:check && bun run test",
-    "check": "bun run check:code && bun run fallow:check"
+    "check": "bun run check:code && bun run license:check && bun run fallow:check"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

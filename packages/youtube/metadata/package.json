@@ -3,6 +3,24 @@
   "version": "0.1.0",
   "private": false,
   "description": "Fetch YouTube content metadata from URLs or search queries",
+  "keywords": [
+    "api",
+    "metadata",
+    "search",
+    "thumbnails",
+    "youtube"
+  ],
+  "homepage": "https://github.com/totallynotdavid/yt_utils/tree/master/packages/youtube/metadata#readme",
+  "bugs": {
+    "url": "https://github.com/totallynotdavid/yt_utils/issues"
+  },
+  "license": "MIT",
+  "author": "David Duran",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/totallynotdavid/yt_utils.git",
+    "directory": "packages/youtube/metadata"
+  },
   "files": [
     "dist",
     "readme.md",
@@ -11,13 +29,22 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run --root ../../..",
     "build": "bunup",
     "prepublishOnly": "bun run typecheck && bun run test && bun run build"
   },
   "dependencies": {
     "@ytutils/core": "workspace:*"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

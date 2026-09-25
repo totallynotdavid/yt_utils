@@ -6,8 +6,7 @@
       "@ytutils/duration": ["./packages/youtube/duration/src/index.ts"],
       "@ytutils/most-replayed": ["./packages/youtube/most-replayed/src/index.ts"],
       "@ytutils/video-processor": ["./packages/youtube/video-processor/src/index.ts"],
-      "@ytutils/video-chunker": ["./packages/youtube/video-chunker/src/index.ts"],
-      "@ytutils/most-replayed-maintainer": ["./tools/most-replayed-maintainer/src/types.ts"]
+      "@ytutils/video-chunker": ["./packages/youtube/video-chunker/src/index.ts"]
     },
     "target": "ES2022",
     "module": "ESNext",
@@ -18,6 +17,6 @@
     "noEmit": true,
     "allowJs": true,
     "checkJs": false,
-    "types": ["node", "vitest/globals"]
+    "types": ["node"]
   }
 }

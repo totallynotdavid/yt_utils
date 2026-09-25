@@ -3,6 +3,25 @@
   "version": "0.1.0",
   "private": false,
   "description": "CLI for downloading YouTube videos and splitting them into fixed-length chunks",
+  "keywords": [
+    "chunks",
+    "cli",
+    "ffmpeg",
+    "splitter",
+    "youtube",
+    "ytdlp"
+  ],
+  "homepage": "https://github.com/totallynotdavid/yt_utils/tree/master/apps/video-chunker-cli#readme",
+  "bugs": {
+    "url": "https://github.com/totallynotdavid/yt_utils/issues"
+  },
+  "license": "MIT",
+  "author": "David Duran",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/totallynotdavid/yt_utils.git",
+    "directory": "apps/video-chunker-cli"
+  },
   "bin": {
     "video-chunker": "dist/bin.js"
   },
@@ -14,11 +33,15 @@
   "type": "module",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run --root ../..",
     "build": "bunup",
+    "start": "bun src/bin.ts",
     "prepublishOnly": "bun run typecheck && bun run test && bun run build"
   },
   "dependencies": {
     "@ytutils/video-chunker": "workspace:*"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

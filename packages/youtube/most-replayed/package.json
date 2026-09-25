@@ -3,6 +3,24 @@
   "version": "0.1.0",
   "private": false,
   "description": "Extract most replayed segments from YouTube content",
+  "keywords": [
+    "heatmap",
+    "markers",
+    "most-replayed",
+    "segments",
+    "youtube"
+  ],
+  "homepage": "https://github.com/totallynotdavid/yt_utils/tree/master/packages/youtube/most-replayed#readme",
+  "bugs": {
+    "url": "https://github.com/totallynotdavid/yt_utils/issues"
+  },
+  "license": "MIT",
+  "author": "David Duran",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/totallynotdavid/yt_utils.git",
+    "directory": "packages/youtube/most-replayed"
+  },
   "files": [
     "dist",
     "readme.md",
@@ -11,9 +29,15 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run --root ../../..",
     "build": "bunup",
     "prepublishOnly": "bun run typecheck && bun run test && bun run build"
   },
@@ -30,5 +54,8 @@
     "puppeteer": {
       "optional": true
     }
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

@@ -3,3 +3,9 @@ coverage
 dist
 .tmp
 .DS_Store
+.env
+.fallow/
+output/
+media/
+*.tgz
+cookies.txt
