@@ -26,6 +26,8 @@ jobs:
       - uses: actions/checkout@v7
 
       - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
 
       - uses: actions/setup-node@v7
         with:
@@ -60,7 +62,13 @@ jobs:
             exit 1
           fi
 
+      - name: Install media binaries for the video-chunker test suite
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+
       - run: bun run check
+
+      - name: Rewrite workspace dependency ranges
+        run: bun scripts/rewrite-workspace-deps.ts ${{ inputs.package_dir }}
 
       - name: Publish package
         run: npm publish --provenance --access public
