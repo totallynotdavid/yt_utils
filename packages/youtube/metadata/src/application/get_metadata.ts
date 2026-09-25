@@ -6,7 +6,10 @@ import { getVideoDetails, searchYoutubeMedia } from '../infra/youtube_api'
 function resolveApiKey(apiKey?: string): string {
   const resolved = apiKey ?? process.env.YOUTUBE_API_KEY
   if (!resolved || resolved.trim().length === 0) {
-    throw new YtUtilsError('INVALID_INPUT', 'Missing YouTube API key')
+    throw new YtUtilsError(
+      'INVALID_INPUT',
+      'Missing YouTube API key: pass { apiKey } or set the YOUTUBE_API_KEY environment variable (a .env file is picked up automatically under Bun)'
+    )
   }
 
   return resolved.trim()
