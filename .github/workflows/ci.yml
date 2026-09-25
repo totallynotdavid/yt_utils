@@ -19,28 +19,15 @@ jobs:
           fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+
+      - name: Install media binaries for the video-chunker test suite
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
 
       - run: bun install --frozen-lockfile
 
-      - run: bun run check:code
+      - run: bun run check
 
-  fallow:
-    runs-on: ubuntu-latest
-    needs: quality
-
-    permissions:
-      contents: read
-      pull-requests: read
-      checks: read
-
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - uses: fallow-rs/fallow@v3
-        with:
-          command: audit
-          sarif: false
-          comment: false
-          review-comments: false
+      - name: Verify every package builds
+        run: bun run build:all
