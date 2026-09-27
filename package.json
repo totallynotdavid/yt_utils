@@ -17,14 +17,14 @@
     "check": "bun run check:code && bun run license:check && bun run fallow:check"
   },
   "devDependencies": {
-    "@types/node": "^26.1.1",
+    "@types/node": "^26.6.3",
     "bunup": "^0.16.32",
-    "fallow": "^3.6.0",
-    "oxfmt": "^0.59.0",
-    "oxlint": "^1.74.0",
-    "oxlint-tsgolint": "^0.25.0",
+    "fallow": "^3.30.0",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "oxlint-tsgolint": "^7.0.2003",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.8"
+    "vitest": "^5.0.2"
   },
-  "packageManager": "bun@1.4.0"
+  "packageManager": "bun@1.4.2"
 }
