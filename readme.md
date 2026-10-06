@@ -40,13 +40,6 @@ linked below.
 | [`@ytutils/video-chunker`](./packages/youtube/video-chunker/readme.md)     | Download, probe, and fixed-length chunk workflows.            |
 | [`@ytutils/video-chunker-cli`](./apps/video-chunker-cli/readme.md)         | A command-line wrapper around the chunk workflow.             |
 
-## Non-goals
-
-This repository does not provide YouTube hosting, API keys, `yt-dlp`, `ffmpeg`,
-`ffprobe`, or Chrome. It does not promise exact media chunk lengths when cuts
-must follow keyframes. It does not format core media values for a terminal; the
-CLI owns that presentation.
-
 ## Documentation
 
 - [Documentation index](./docs/readme.md)

@@ -143,11 +143,6 @@ bun run fmt       # oxfmt         (.oxfmtrc.json), fmt:check to verify only
 Lint and format are [oxlint] / [oxfmt], configured in JSON (`.oxlintrc.json`,
 `.oxfmtrc.json`).
 
-## Non-goals
-
-This CLI does not re-encode chunks, choose exact keyframe positions, provide
-`yt-dlp` or FFmpeg, or hide the cookie file used for restricted videos.
-
 ## Links
 
 - [Library workflow](../../packages/youtube/video-chunker/readme.md)

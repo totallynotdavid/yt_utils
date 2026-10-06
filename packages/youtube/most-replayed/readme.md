@@ -91,12 +91,6 @@ The SVG strategy fails with `MissingPuppeteerError` (not a `YtUtilsError`) when
 (e.g. Ubuntu 23.10+ with restricted user namespaces), the launch is retried
 without the sandbox automatically.
 
-## Non-goals
-
-This package does not download the video, provide a browser runtime, or use SVG
-fallback by default. The default `auto` strategy uses JSON and only tries SVG
-when `allowSvgFallback` is true.
-
 ## Links
 
 - [Architecture](../../../architecture.md)

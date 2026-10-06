@@ -102,11 +102,6 @@ Errors are `YtUtilsError` from `@ytutils/core` with a `code`:
 | `UPSTREAM_ERROR` | the YouTube Data API returned a non-2xx response     |
 | `PARSING_ERROR`  | the API response could not be parsed                 |
 
-## Non-goals
-
-This package does not download media, extract replay markers, or return full
-details for playlists and channels. It returns those references' IDs and types.
-
 ## Links
 
 - [Architecture](../../../architecture.md)

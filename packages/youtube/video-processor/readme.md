@@ -75,12 +75,6 @@ Errors are `YtUtilsError` from `@ytutils/core` with a `code`:
 | `PROCESS_EXEC_ERROR` | yt-dlp or ffmpeg exited non-zero      |
 | `PARSING_ERROR`      | the yt-dlp output could not be parsed |
 
-## Non-goals
-
-This package does not provide `yt-dlp` or `ffmpeg`, upload output, or split a
-video into chunks. It invokes those programs through the system `PATH` and
-returns their output paths.
-
 ## Links
 
 - [Architecture](../../../architecture.md)

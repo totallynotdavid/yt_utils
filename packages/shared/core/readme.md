@@ -34,11 +34,6 @@ parseVideoId('dQw4w9WgXcQ') // 'dQw4w9WgXcQ'
 - `HttpClient`, `HttpRequest`, and `HttpResponse` define injectable HTTP
   contracts. `FetchHttpClient` uses `fetch` and a 15-second default timeout.
 
-## Non-goals
-
-This package does not call the YouTube Data API, download videos, parse replay
-heatmaps, or format terminal output.
-
 ## Links
 
 - [Architecture](../../../architecture.md)

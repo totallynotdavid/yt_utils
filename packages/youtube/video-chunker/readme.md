@@ -131,12 +131,6 @@ approximately, not exactly, `chunkSeconds`. Files written are learned from
 ffmpeg's `-segment_list` manifest, never by scanning the directory, so a
 previous run's leftover chunks can't leak into this run's result.
 
-## Non-goals
-
-This package does not re-encode media, promise exact chunk lengths, format
-durations or sizes for terminals, or clean up files from previous runs by
-scanning the output directory.
-
 ## Links
 
 - [Architecture](../../../architecture.md)

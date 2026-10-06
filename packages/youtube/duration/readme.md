@@ -70,11 +70,6 @@ Errors are `YtUtilsError` from `@ytutils/core` with a `code`:
 | `UPSTREAM_ERROR` | the YouTube Data API returned a non-2xx response                        |
 | `PARSING_ERROR`  | the API returned an unparseable ISO-8601 duration                       |
 
-## Non-goals
-
-This package does not resolve playlists or channels to durations, cache API
-responses, or download the video.
-
 ## Links
 
 - [Architecture](../../../architecture.md)
