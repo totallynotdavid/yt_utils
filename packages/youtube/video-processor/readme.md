@@ -1,9 +1,12 @@
 # @ytutils/video-processor
 
-Download a YouTube video (or a trimmed slice of one) with `yt-dlp` and convert
-it with `ffmpeg`. Returns the absolute paths of everything it produced.
+`@ytutils/video-processor` downloads one YouTube video, optionally trims it, and
+converts it with `yt-dlp` and `ffmpeg`. It returns absolute paths for the files
+it produces; it does not split a video into fixed-length chunks.
 
-## Installation
+Owner: `@totallynotdavid`
+
+## Install
 
 ```bash
 npm install @ytutils/video-processor
@@ -11,8 +14,9 @@ npm install @ytutils/video-processor
 
 Requires `yt-dlp` and `ffmpeg` on your `PATH`.
 
-## Usage
+## Smallest example
 
+<!-- prettier-ignore -->
 ```ts
 import { processVideo } from '@ytutils/video-processor'
 
@@ -26,6 +30,13 @@ const { artifacts } = await processVideo({
 
 console.log(artifacts[0].path) // '/abs/path/media/jNQXAC9IVRw.opus'
 ```
+
+## Features
+
+- Trim a download with `startTimeSec` and `endTimeSec`.
+- Select audio or video formats and best or worst source quality.
+- Cap video download size and choose the output directory.
+- Inject command and filesystem dependencies for tests.
 
 ## API reference
 
@@ -63,3 +74,15 @@ Errors are `YtUtilsError` from `@ytutils/core` with a `code`:
 | `NOT_FOUND`          | the video is unavailable              |
 | `PROCESS_EXEC_ERROR` | yt-dlp or ffmpeg exited non-zero      |
 | `PARSING_ERROR`      | the yt-dlp output could not be parsed |
+
+## Non-goals
+
+This package does not provide `yt-dlp` or `ffmpeg`, upload output, or split a
+video into chunks. It invokes those programs through the system `PATH` and
+returns their output paths.
+
+## Links
+
+- [Architecture](../../../architecture.md)
+- [Documentation index](../../../docs/readme.md)
+- [Source](./src/index.ts)

@@ -1,7 +1,10 @@
 # @ytutils/most-replayed
 
-Extract the most replayed segments of a YouTube video from its heatmap — the
-"Popular moments" the progress bar shows.
+`@ytutils/most-replayed` extracts the most replayed segments of a YouTube video
+from the heatmap that the progress bar shows. The JSON strategy reads the watch
+page over HTTP; the SVG strategy uses optional headless Chrome.
+
+Owner: `@totallynotdavid`
 
 Two extraction strategies, usable independently:
 
@@ -10,7 +13,7 @@ Two extraction strategies, usable independently:
 - **svg**: renders the watch page in headless Chrome (via the optional peer
   dependency `puppeteer`), hovers the progress bar, and parses the heatmap SVG.
 
-## Installation
+## Install
 
 ```bash
 npm install @ytutils/most-replayed
@@ -22,8 +25,9 @@ npm install @ytutils/most-replayed
 npm install puppeteer
 ```
 
-## Usage
+## Smallest example
 
+<!-- prettier-ignore -->
 ```ts
 import { getMostReplayed } from '@ytutils/most-replayed'
 
@@ -35,6 +39,13 @@ console.log(result.segments)
 //   { position: 2, start: 44, end: 47, score: 0.0593 },
 // ]
 ```
+
+## Features
+
+- Read markers from watch-page JSON without a browser.
+- Read the rendered SVG heatmap through optional Puppeteer.
+- Rank the requested number of segments and report their source.
+- Inject marker strategies or an HTTP client for tests and proxying.
 
 ## API reference
 
@@ -60,9 +71,8 @@ Returns a `MostReplayedResult`:
 | `source`      | which strategy produced the result: `'json'` or `'svg'`            |
 | `segments`    | top segments, ranked: `{ position, start, end, score }` in seconds |
 
-`deps` overrides the marker strategies themselves
-(`getJsonMarkersForVideo` / `getSvgMarkersForVideo`), which is how the tests
-inject fixtures.
+`deps` overrides the marker strategies themselves (`getJsonMarkersForVideo` /
+`getSvgMarkersForVideo`), which is how the tests inject fixtures.
 
 ## Errors
 
@@ -76,7 +86,19 @@ Errors are `YtUtilsError` from `@ytutils/core` with a `code`:
 | `DEPENDENCY_MISSING` | SVG strategy: Chrome could not be launched                    |
 | `UPSTREAM_ERROR`     | SVG strategy: the page could not be captured                  |
 
-The SVG strategy fails with `MissingPuppeteerError` (not a `YtUtilsError`)
-when `puppeteer` is not installed. On systems where Chrome's sandbox cannot
-start (e.g. Ubuntu 23.10+ with restricted user namespaces), the launch is
-retried without the sandbox automatically.
+The SVG strategy fails with `MissingPuppeteerError` (not a `YtUtilsError`) when
+`puppeteer` is not installed. On systems where Chrome's sandbox cannot start
+(e.g. Ubuntu 23.10+ with restricted user namespaces), the launch is retried
+without the sandbox automatically.
+
+## Non-goals
+
+This package does not download the video, provide a browser runtime, or use SVG
+fallback by default. The default `auto` strategy uses JSON and only tries SVG
+when `allowSvgFallback` is true.
+
+## Links
+
+- [Architecture](../../../architecture.md)
+- [Documentation index](../../../docs/readme.md)
+- [Source](./src/index.ts)

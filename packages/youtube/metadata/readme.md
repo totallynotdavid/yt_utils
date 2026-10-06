@@ -1,9 +1,13 @@
 # @ytutils/metadata
 
-Retrieve metadata for YouTube content — videos, playlists, and channels — by
-URL or by search query.
+`@ytutils/metadata` resolves YouTube video, playlist, and channel references by
+URL or search query, then optionally retrieves full video details. It uses the
+YouTube Data API for search and details; direct `idOnly` URL parsing stays
+local.
 
-## Installation
+Owner: `@totallynotdavid`
+
+## Install
 
 ```bash
 npm install @ytutils/metadata
@@ -12,15 +16,16 @@ npm install @ytutils/metadata
 ## Authentication
 
 Search queries and full video details go through the YouTube Data API, which
-requires an API key. Pass it via `options.apiKey` or set the
-`YOUTUBE_API_KEY` environment variable (a `.env` file is picked up
-automatically under Bun). Get a key from the
+requires an API key. Pass it via `options.apiKey` or set the `YOUTUBE_API_KEY`
+environment variable (a `.env` file is picked up automatically under Bun). Get a
+key from the
 [Google Cloud console](https://console.cloud.google.com/apis/library/youtube.googleapis.com).
 
 Parsing a direct URL with `fetchType: 'idOnly'` is local and needs no key.
 
-## Usage
+## Smallest example
 
+<!-- prettier-ignore -->
 ```ts
 import { getMetadata } from '@ytutils/metadata'
 
@@ -48,6 +53,13 @@ await getMetadata('never gonna give you up', { fetchType: 'idOnly' })
 
 `fullData` details are only fetched for videos; playlists and channels return
 their id and type.
+
+## Features
+
+- Resolve video IDs, supported URLs, playlists, channels, and search queries.
+- Return IDs and media types without an API call for direct `idOnly` URLs.
+- Fetch video duration, title, channel, thumbnail, view count, and like count.
+- Fall back through the available thumbnail sizes.
 
 ## API reference
 
@@ -89,3 +101,14 @@ Errors are `YtUtilsError` from `@ytutils/core` with a `code`:
 | `NOT_FOUND`      | no result for the query, or the video has no details |
 | `UPSTREAM_ERROR` | the YouTube Data API returned a non-2xx response     |
 | `PARSING_ERROR`  | the API response could not be parsed                 |
+
+## Non-goals
+
+This package does not download media, extract replay markers, or return full
+details for playlists and channels. It returns those references' IDs and types.
+
+## Links
+
+- [Architecture](../../../architecture.md)
+- [Documentation index](../../../docs/readme.md)
+- [Source](./src/index.ts)

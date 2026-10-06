@@ -1,20 +1,55 @@
 # @ytutils/video-chunker-cli
 
-Downloads a YouTube video and splits it into fixed-length chunks (default: 1
-hour) without re-encoding. Prints progress and a final chunk summary.
+`@ytutils/video-chunker-cli` downloads a YouTube video and splits it into
+fixed-length chunks (default: 1 hour) without re-encoding. It prints progress
+and a final chunk summary, and delegates the workflow to
+`@ytutils/video-chunker`.
 
-## Get started
+Owner: `@totallynotdavid`
 
-You need [Bun](https://bun.sh), plus [`yt-dlp`](https://github.com/yt-dlp/yt-dlp)
-and `ffmpeg` / `ffprobe` on your `PATH`. Then:
+## Install
+
+Install the published CLI with npm:
+
+```sh
+npm install --global @ytutils/video-chunker-cli
+```
+
+Run the installed command with Node.js 22 or newer:
+
+```sh
+video-chunker "https://www.youtube.com/watch?v=..."
+```
+
+For workspace development, use:
 
 ```sh
 bun install
-bun run start "https://www.youtube.com/watch?v=..."
+bun run --cwd apps/video-chunker-cli start "https://www.youtube.com/watch?v=..."
 ```
 
-That downloads the video into `./output` and splits it into 1-hour chunks.
-Here is what a run looks like:
+The workspace command needs [Bun](https://bun.sh). Both forms need
+[`yt-dlp`](https://github.com/yt-dlp/yt-dlp) and `ffmpeg` / `ffprobe` on your
+`PATH`.
+
+## Smallest example
+
+Print the installed CLI help without downloading a video:
+
+```sh
+video-chunker --help
+```
+
+## Get started
+
+Run the installed command:
+
+```sh
+video-chunker "https://www.youtube.com/watch?v=..."
+```
+
+That downloads the video into `./output` and splits it into 1-hour chunks. Here
+is what that run looks like:
 
 ```txt
 Downloading
@@ -46,7 +81,7 @@ Done. 3 chunks in ./output/
 ## Options
 
 ```sh
-bun run start <youtube-url> [options]
+video-chunker <youtube-url> [options]
 ```
 
 | flag            | meaning                                                   | default    |
@@ -58,7 +93,7 @@ bun run start <youtube-url> [options]
 | `-h`, `--help`  | show help                                                 |            |
 
 ```sh
-bun run start "https://www.youtube.com/watch?v=..." --chunk 45m --out ./clips
+video-chunker "https://www.youtube.com/watch?v=..." --chunk 45m --out ./clips
 ```
 
 ## Features
@@ -74,9 +109,9 @@ bun run start "https://www.youtube.com/watch?v=..." --chunk 45m --out ./clips
 ## YouTube access
 
 YouTube now requires solving a JS challenge to reach real video formats. The
-pipe handles this for you: it auto-detects a JS runtime on `PATH`
-(`deno` / `node` / `bun` / `quickjs`) and lets yt-dlp fetch the EJS solver
-scripts. Make sure at least one of those runtimes is installed.
+pipe handles this for you: it auto-detects a JS runtime on `PATH` (`deno` /
+`node` / `bun` / `quickjs`) and lets yt-dlp fetch the EJS solver scripts. Make
+sure at least one of those runtimes is installed.
 
 For login-only, age-restricted, or members-only videos, or to dodge rate
 limiting, export your cookies in **Netscape format** and pass them with
@@ -88,7 +123,8 @@ git-ignored by default.
 This is a Bun workspace with two packages:
 
 - `@ytutils/video-chunker`: library workflow and types.
-- `@ytutils/video-chunker-cli`: command wrapper over core: argument parsing, progress lines, and the summary table.
+- `@ytutils/video-chunker-cli`: command wrapper over core: argument parsing,
+  progress lines, and the summary table.
 
 ```
 packages/youtube/video-chunker/src/  run.ts fetch.ts probe.ts split.ts events.ts binaries.ts ...
@@ -104,5 +140,17 @@ bun run lint      # oxlint        (.oxlintrc.json)
 bun run fmt       # oxfmt         (.oxfmtrc.json), fmt:check to verify only
 ```
 
-Lint and format are [oxlint] / [oxfmt], configured in JSON
-(`.oxlintrc.json`, `.oxfmtrc.json`).
+Lint and format are [oxlint] / [oxfmt], configured in JSON (`.oxlintrc.json`,
+`.oxfmtrc.json`).
+
+## Non-goals
+
+This CLI does not re-encode chunks, choose exact keyframe positions, provide
+`yt-dlp` or FFmpeg, or hide the cookie file used for restricted videos.
+
+## Links
+
+- [Library workflow](../../packages/youtube/video-chunker/readme.md)
+- [Architecture](../../architecture.md)
+- [Documentation index](../../docs/readme.md)
+- [Source](./src/bin.ts)

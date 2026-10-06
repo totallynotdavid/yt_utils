@@ -1,7 +1,37 @@
 # @ytutils/video-chunker
 
-Core workflow: a YouTube URL in, fixed-length
-chunks out.
+`@ytutils/video-chunker` downloads a YouTube URL, probes the media, and writes
+fixed-length chunks without re-encoding. It is the library workflow used by the
+CLI; it requires `yt-dlp`, `ffmpeg`, and `ffprobe` on `PATH`.
+
+Owner: `@totallynotdavid`
+
+## Install
+
+```sh
+npm install @ytutils/video-chunker
+```
+
+## Smallest example
+
+<!-- prettier-ignore -->
+```ts
+import { run } from '@ytutils/video-chunker'
+
+const url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+const result = await run(
+  { url, chunkSeconds: 3600, outDir: './output' },
+  { onProgress: (e) => e.type === 'chunk' && console.log(e.chunk.index) }
+)
+console.log(result.chunks.length)
+```
+
+Core deals in raw numbers (seconds, bytes). Formatting into MB / `HH:MM:SS`
+lives in the CLI. `run()` validates the request, verifies that binaries exist
+_before_ downloading, runs fetch → probe → split, and (unless `keepSource`)
+removes the full download once it has been split.
+
+## Workflow
 
 ```mermaid
 flowchart TD
@@ -30,22 +60,12 @@ flowchart TD
 
 </details>
 
-## run()
+## Features
 
-```ts
-import { run } from '@ytutils/video-chunker'
-
-const result = await run(
-  { url, chunkSeconds: 3600, outDir: './output' },
-  { onProgress: (e) => e.type === 'chunk' && console.log(e.chunk.index) }
-)
-console.log(result.chunks.length)
-```
-
-Core deals in raw numbers (seconds, bytes). Formatting into MB / `HH:MM:SS`
-lives in the CLI. `run()` validates the request, verifies that binaries exist
-_before_ downloading, runs fetch → probe → split, and (unless `keepSource`)
-removes the full download once it has been split.
+- Verify required binaries before downloading.
+- Report fetch, probe, split, and per-chunk progress through typed events.
+- Compose `fetchVideo`, `probe`, and `splitVideo` without the default workflow.
+- Keep or remove the downloaded source at the workflow boundary.
 
 ## The event stream
 
@@ -61,8 +81,8 @@ with `percent` already computed where a total is known:
 | `chunk`          | `chunk: Chunk` (emitted as each one lands)    |
 | `stage:done`     | `stage`                                       |
 
-Errors are `VideoError` with a `code` (`VideoErrorCode`). See `src/events.ts` and
-`src/errors.ts` for the exact shapes.
+Errors are `VideoError` with a `code` (`VideoErrorCode`). See `src/events.ts`
+and `src/errors.ts` for the exact shapes.
 
 ## Composing your own workflow
 
@@ -70,9 +90,11 @@ Errors are `VideoError` with a `code` (`VideoErrorCode`). See `src/events.ts` an
 different shape, your own ordering, a step in between, a different sink, call
 them directly. There is no workflow object to adopt and no context to satisfy:
 
+<!-- prettier-ignore -->
 ```ts
 import { fetchVideo, probe, splitVideo } from '@ytutils/video-chunker'
 
+const url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 const { path } = await fetchVideo(url, { outDir: './work' })
 const { durationSeconds } = await probe(path)
 const chunks = await splitVideo(path, { outDir: './work', chunkSeconds: 3600 })
@@ -83,27 +105,40 @@ for (const chunk of chunks) {
 ```
 
 Each operation takes its primary input positionally and an options object, and
-reports only what its tool knows: `fetchVideo` emits `{ receivedBytes,
-totalBytes }`, `splitVideo` emits `{ processedSeconds }` and an `onChunk`
-callback. Deriving `percent` is the caller's job (`run()` does it for you).
+reports only what its tool knows: `fetchVideo` emits
+`{ receivedBytes, totalBytes }`, `splitVideo` emits `{ processedSeconds }` and
+an `onChunk` callback. Deriving `percent` is the caller's job (`run()` does it
+for you).
 
 ## The vocabulary
 
 Durations are seconds, sizes are bytes; presentation units never appear in core.
 The shared types live in `src/media.ts`:
 
-- `ChunkRequest`, what `run()` is asked to do (`url`, `chunkSeconds`,
-  `outDir`, optional `cookies` / `keepSource`). No defaults live here; callers
-  pass explicit values.
-- `FetchedSource` → `MediaInfo` → `Source`, a download, its
-  measurements, and the two merged.
+- `ChunkRequest`, what `run()` is asked to do (`url`, `chunkSeconds`, `outDir`,
+  optional `cookies` / `keepSource`). No defaults live here; callers pass
+  explicit values.
+- `FetchedSource` → `MediaInfo` → `Source`, a download, its measurements, and
+  the two merged.
 - `Chunk`, one output segment on disk (`index`, `path`, `durationSeconds`,
   `sizeBytes`).
-- `ChunkResult`, `run()`'s output: the `source`, every `chunk`, and the
-  `outDir` they landed in.
+- `ChunkResult`, `run()`'s output: the `source`, every `chunk`, and the `outDir`
+  they landed in.
 
 The split uses ffmpeg's segment muxer with `-c copy`, so cuts land on the
 nearest keyframe before each target time, a chunk's real length is
 approximately, not exactly, `chunkSeconds`. Files written are learned from
 ffmpeg's `-segment_list` manifest, never by scanning the directory, so a
 previous run's leftover chunks can't leak into this run's result.
+
+## Non-goals
+
+This package does not re-encode media, promise exact chunk lengths, format
+durations or sizes for terminals, or clean up files from previous runs by
+scanning the output directory.
+
+## Links
+
+- [Architecture](../../../architecture.md)
+- [Documentation index](../../../docs/readme.md)
+- [Source](./src/index.ts)

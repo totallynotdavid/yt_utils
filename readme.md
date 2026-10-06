@@ -1,31 +1,58 @@
 # yt_utils
 
-Monorepo for YouTube utility packages.
+`yt_utils` is a Bun and TypeScript monorepo for applications that need to read
+YouTube references and metadata, extract replay segments, or download and
+process video. The published packages own these operations; the repository does
+not run a hosted service or hide the external APIs and programs they call.
 
-## Layout
+## Install
 
-- `packages/shared/*`: shared libraries used across package families.
-- `packages/youtube/*`: published YouTube-focused libraries.
-- `apps/*`: runnable packages such as CLIs.
-- `tools/*`: private internal automation.
+Install the workspace with [Bun](https://bun.sh). The repository pins Bun
+`1.4.2` in [`mise.toml`](./mise.toml).
 
-## Tooling
+```sh
+bun install
+```
 
-- Bun workspaces
-- TypeScript
-- Vitest
-- OXLint (with [type-aware backend](https://github.com/oxc-project/tsgolint))
-- OXFmt
-- Fallow (static analysis)
+The media packages also need the external programs named in their package
+documentation. API-backed packages need a YouTube Data API key where stated.
 
-## Scripts
+## Smallest example
 
-- `bun run check` runs typecheck, lint, format check, tests, the license sync check, and fallow. Lint uses the type-aware backend (`.oxlintrc.json` -> `options.typeAware`).
-- `bun run typecheck` runs tsc for the repo-root project and typechecks in all packages.
-- `bun run lint` runs oxlint once from root.
-- `bun run fmt` / `bun run fmt:check` runs oxfmt once from root.
-- `bun run test` runs vitest across the workspace. Per-package `test` scripts point at the same root suite (`--root`), so a package's `prepublishOnly` gate always runs the real tests.
-- `bun run build:all` builds every publishable package with bunup.
-- `bun run license:sync` / `bun run license:check` copies the root `LICENSE` into every publishable package and verifies no drift. Package managers drop symlinks at pack time, so each package carries a plain committed copy.
-- `bun run fallow` / `bun run fallow:check` runs the [fallow](https://github.com/fallow-rs/fallow) static analyzer (configured by `.fallowrc.json`).
-- `scripts/rewrite-workspace-deps.ts` rewrites `workspace:*` ranges into real versions for `npm publish`, which cannot resolve the workspace protocol. The release workflows run it right before publishing.
+Run the CLI help without downloading a video:
+
+```sh
+bun run --cwd apps/video-chunker-cli start --help
+```
+
+For a package-specific example and its prerequisites, use the package README
+linked below.
+
+## Features
+
+| Package                                                                    | What it owns                                                  |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| [`@ytutils/core`](./packages/shared/core/readme.md)                        | Shared errors, HTTP contracts, and YouTube reference parsing. |
+| [`@ytutils/metadata`](./packages/youtube/metadata/readme.md)               | YouTube video, playlist, and channel IDs and video details.   |
+| [`@ytutils/duration`](./packages/youtube/duration/readme.md)               | Video duration in numeric units or clock format.              |
+| [`@ytutils/most-replayed`](./packages/youtube/most-replayed/readme.md)     | Most-replayed segments from JSON markers or the SVG heatmap.  |
+| [`@ytutils/video-processor`](./packages/youtube/video-processor/readme.md) | `yt-dlp` downloads and `ffmpeg` conversion for one video.     |
+| [`@ytutils/video-chunker`](./packages/youtube/video-chunker/readme.md)     | Download, probe, and fixed-length chunk workflows.            |
+| [`@ytutils/video-chunker-cli`](./apps/video-chunker-cli/readme.md)         | A command-line wrapper around the chunk workflow.             |
+
+## Non-goals
+
+This repository does not provide YouTube hosting, API keys, `yt-dlp`, `ffmpeg`,
+`ffprobe`, or Chrome. It does not promise exact media chunk lengths when cuts
+must follow keyframes. It does not format core media values for a terminal; the
+CLI owns that presentation.
+
+## Documentation
+
+- [Documentation index](./docs/readme.md)
+- [Architecture](./architecture.md)
+- [Contributing and development commands](./contributing.md)
+
+## License
+
+MIT. See [`LICENSE`](./LICENSE).
