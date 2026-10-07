@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/node": "^26.6.3",
     "bunup": "^0.16.32",
-    "fallow": "^3.30.0",
+    "fallow": "^3.31.0",
     "oxfmt": "^0.70.0",
     "oxlint": "^1.85.0",
     "oxlint-tsgolint": "^7.0.2003",
