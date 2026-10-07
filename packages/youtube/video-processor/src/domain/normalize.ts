@@ -24,18 +24,28 @@ export type NormalizedProcessVideoRequest = {
   videoSizeMb?: number
 }
 
-function assertTimeRange(startTimeSec?: number, endTimeSec?: number): void {
+function assertValidStartTime(startTimeSec?: number): void {
   if (startTimeSec !== undefined && (!Number.isFinite(startTimeSec) || startTimeSec < 0)) {
     throw new YtUtilsError('INVALID_INPUT', 'startTimeSec must be a non-negative number')
   }
+}
 
+function assertValidEndTime(endTimeSec?: number): void {
   if (endTimeSec !== undefined && (!Number.isFinite(endTimeSec) || endTimeSec <= 0)) {
     throw new YtUtilsError('INVALID_INPUT', 'endTimeSec must be a positive number')
   }
+}
 
+function assertOrderedTimeRange(startTimeSec?: number, endTimeSec?: number): void {
   if (startTimeSec !== undefined && endTimeSec !== undefined && startTimeSec >= endTimeSec) {
     throw new YtUtilsError('INVALID_INPUT', 'startTimeSec must be lower than endTimeSec')
   }
+}
+
+function assertTimeRange(startTimeSec?: number, endTimeSec?: number): void {
+  assertValidStartTime(startTimeSec)
+  assertValidEndTime(endTimeSec)
+  assertOrderedTimeRange(startTimeSec, endTimeSec)
 }
 
 export function normalizeProcessVideoRequest(
