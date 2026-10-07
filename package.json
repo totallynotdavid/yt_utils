@@ -17,7 +17,7 @@
     "check": "bun run check:code && bun run license:check && bun run fallow:check"
   },
   "devDependencies": {
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.4",
     "bunup": "^0.16.32",
     "fallow": "^3.30.0",
     "oxfmt": "^0.70.0",
