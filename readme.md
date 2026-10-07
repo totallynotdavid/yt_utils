@@ -1,50 +1,69 @@
 # yt_utils
 
-`yt_utils` is a Bun and TypeScript monorepo for applications that need to read
-YouTube references and metadata, extract replay segments, or download and
-process video. The published packages own these operations; the repository does
-not run a hosted service or hide the external APIs and programs they call.
+`yt_utils` is a Bun and TypeScript workspace for developers building tools that
+read YouTube references and metadata, find replayed segments, or download and
+process video. It provides libraries and a command-line application.
 
-## Install
+## Get started
 
-Install the workspace with [Bun](https://bun.sh). The repository pins Bun
-`1.4.2` in [`mise.toml`](./mise.toml).
+Clone the repository, install its dependencies, and print the chunker help:
 
 ```sh
 bun install
-```
-
-The media packages also need the external programs named in their package
-documentation. API-backed packages need a YouTube Data API key where stated.
-
-## Smallest example
-
-Run the CLI help without downloading a video:
-
-```sh
 bun run --cwd apps/video-chunker-cli start --help
 ```
 
-For a package-specific example and its prerequisites, use the package README
-linked below.
+The CLI needs `yt-dlp`, `ffmpeg`, and `ffprobe` on `PATH` when it downloads a
+video. API-backed packages need a YouTube Data API key. The package manuals
+describe those requirements and the smallest working calls.
 
-## Features
+After installing those media tools, run the workflow with a public video:
 
-| Package                                                                    | What it owns                                                  |
+```sh
+bun run --cwd apps/video-chunker-cli start "https://www.youtube.com/watch?v=dQw4w9WgXcQ" --chunk 1h --out ./output
+```
+
+## Use a package
+
+The six libraries and the CLI are not published to npm; use them from the
+workspace.
+
+The six libraries and the CLI are workspace members. A sibling workspace package
+declares a dependency with a `workspace:*` range. For example:
+
+```json
+{
+  "dependencies": {
+    "@ytutils/core": "workspace:*"
+  }
+}
+```
+
+From the repository root, install dependencies and build the workspace before
+running a sibling package that imports a library:
+
+```sh
+bun install
+bun run build:all
+```
+
+## Packages
+
+| Package                                                                    | Use it for                                                    |
 | -------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | [`@ytutils/core`](./packages/shared/core/readme.md)                        | Shared errors, HTTP contracts, and YouTube reference parsing. |
-| [`@ytutils/metadata`](./packages/youtube/metadata/readme.md)               | YouTube video, playlist, and channel IDs and video details.   |
-| [`@ytutils/duration`](./packages/youtube/duration/readme.md)               | Video duration in numeric units or clock format.              |
-| [`@ytutils/most-replayed`](./packages/youtube/most-replayed/readme.md)     | Most-replayed segments from JSON markers or the SVG heatmap.  |
-| [`@ytutils/video-processor`](./packages/youtube/video-processor/readme.md) | `yt-dlp` downloads and `ffmpeg` conversion for one video.     |
-| [`@ytutils/video-chunker`](./packages/youtube/video-chunker/readme.md)     | Download, probe, and fixed-length chunk workflows.            |
-| [`@ytutils/video-chunker-cli`](./apps/video-chunker-cli/readme.md)         | A command-line wrapper around the chunk workflow.             |
+| [`@ytutils/metadata`](./packages/youtube/metadata/readme.md)               | YouTube IDs, references, searches, and video details.         |
+| [`@ytutils/duration`](./packages/youtube/duration/readme.md)               | Video duration as numbers or a clock string.                  |
+| [`@ytutils/most-replayed`](./packages/youtube/most-replayed/readme.md)     | Most-replayed segments from JSON or the rendered heatmap.     |
+| [`@ytutils/video-processor`](./packages/youtube/video-processor/readme.md) | Download, trim, and convert one video.                        |
+| [`@ytutils/video-chunker`](./packages/youtube/video-chunker/readme.md)     | Download, probe, and split a video into fixed-length chunks.  |
+| [`@ytutils/video-chunker-cli`](./apps/video-chunker-cli/readme.md)         | Run the chunk workflow from a terminal.                       |
 
-## Documentation
+## Where to go next
 
-- [Documentation index](./docs/readme.md)
+- [Manual](./docs/readme.md)
 - [Architecture](./architecture.md)
-- [Contributing and development commands](./contributing.md)
+- [Development](./docs/development.md)
 
 ## License
 

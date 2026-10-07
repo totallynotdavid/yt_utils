@@ -4,12 +4,17 @@
 and returns seconds, minutes, hours, or a `MM:SS` / `HH:MM:SS` clock string. It
 accepts video IDs and supported YouTube video URLs.
 
-Owner: `@totallynotdavid`
+## Use from the workspace
 
-## Install
+`@ytutils/duration` is not published to npm; use it from the workspace. Use
+`@ytutils/duration` from a sibling workspace package. Declare the dependency as
+`"@ytutils/duration": "workspace:*"`, then from the repository root install
+dependencies and build before running the importing package. The package exports
+point at `dist`, so the build is required:
 
-```bash
-npm install @ytutils/duration
+```sh
+bun install
+bun run build:all
 ```
 
 ## Authentication

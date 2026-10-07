@@ -5,12 +5,17 @@ URL or search query, then optionally retrieves full video details. It uses the
 YouTube Data API for search and details; direct `idOnly` URL parsing stays
 local.
 
-Owner: `@totallynotdavid`
+## Use from the workspace
 
-## Install
+`@ytutils/metadata` is not published to npm; use it from the workspace. Use
+`@ytutils/metadata` from a sibling workspace package. Declare the dependency as
+`"@ytutils/metadata": "workspace:*"`, then from the repository root install
+dependencies and build before running the importing package. The package exports
+point at `dist`, so the build is required:
 
-```bash
-npm install @ytutils/metadata
+```sh
+bun install
+bun run build:all
 ```
 
 ## Authentication

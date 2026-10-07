@@ -2,14 +2,19 @@
 
 `@ytutils/video-processor` downloads one YouTube video, optionally trims it, and
 converts it with `yt-dlp` and `ffmpeg`. It returns absolute paths for the files
-it produces; it does not split a video into fixed-length chunks.
+it produces. Fixed-length chunking is provided by `@ytutils/video-chunker`.
 
-Owner: `@totallynotdavid`
+## Use from the workspace
 
-## Install
+`@ytutils/video-processor` is not published to npm; use it from the workspace.
+Use `@ytutils/video-processor` from a sibling workspace package. Declare the
+dependency as `"@ytutils/video-processor": "workspace:*"`, then from the
+repository root install dependencies and build before running the importing
+package. The package exports point at `dist`, so the build is required:
 
-```bash
-npm install @ytutils/video-processor
+```sh
+bun install
+bun run build:all
 ```
 
 Requires `yt-dlp` and `ffmpeg` on your `PATH`.

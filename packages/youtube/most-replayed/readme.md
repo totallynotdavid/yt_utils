@@ -4,8 +4,6 @@
 from the heatmap that the progress bar shows. The JSON strategy reads the watch
 page over HTTP; the SVG strategy uses optional headless Chrome.
 
-Owner: `@totallynotdavid`
-
 Two extraction strategies, usable independently:
 
 - **json**: reads heatmap markers from the watch page's player response. Plain
@@ -13,17 +11,22 @@ Two extraction strategies, usable independently:
 - **svg**: renders the watch page in headless Chrome (via the optional peer
   dependency `puppeteer`), hovers the progress bar, and parses the heatmap SVG.
 
-## Install
+## Use from the workspace
 
-```bash
-npm install @ytutils/most-replayed
+`@ytutils/most-replayed` is not published to npm; use it from the workspace. Use
+`@ytutils/most-replayed` from a sibling workspace package. Declare the
+dependency as `"@ytutils/most-replayed": "workspace:*"`, then from the
+repository root install dependencies and build before running the importing
+package. The package exports point at `dist`, so the build is required:
+
+```sh
+bun install
+bun run build:all
 ```
 
-`puppeteer` is an optional peer dependency, only needed for the SVG strategy:
-
-```bash
-npm install puppeteer
-```
+`puppeteer` is an optional peer dependency, only needed for the SVG strategy.
+The workspace already declares it as a development dependency, so `bun install`
+includes it.
 
 ## Smallest example
 

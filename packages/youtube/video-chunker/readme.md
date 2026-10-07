@@ -4,12 +4,17 @@
 fixed-length chunks without re-encoding. It is the library workflow used by the
 CLI; it requires `yt-dlp`, `ffmpeg`, and `ffprobe` on `PATH`.
 
-Owner: `@totallynotdavid`
+## Use from the workspace
 
-## Install
+`@ytutils/video-chunker` is not published to npm; use it from the workspace. Use
+`@ytutils/video-chunker` from a sibling workspace package. Declare the
+dependency as `"@ytutils/video-chunker": "workspace:*"`, then from the
+repository root install dependencies and build before running the importing
+package. The package exports point at `dist`, so the build is required:
 
 ```sh
-npm install @ytutils/video-chunker
+bun install
+bun run build:all
 ```
 
 ## Smallest example

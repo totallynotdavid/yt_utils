@@ -1,15 +1,20 @@
 # @ytutils/core
 
 `@ytutils/core` provides shared errors, HTTP contracts, and YouTube reference
-parsers for the other `yt_utils` packages. It is a library boundary, not a
-YouTube client: it does not fetch metadata or invoke media programs.
+parsers for the other `yt_utils` packages. Metadata and media packages own API
+requests and external media programs.
 
-Owner: `@totallynotdavid`
+## Use from the workspace
 
-## Install
+`@ytutils/core` is not published to npm; use it from the workspace. Use
+`@ytutils/core` from a sibling workspace package. Declare the dependency as
+`"@ytutils/core": "workspace:*"`, then from the repository root install
+dependencies and build before running the importing package. The package exports
+point at `dist`, so the build is required:
 
 ```sh
-npm install @ytutils/core
+bun install
+bun run build:all
 ```
 
 ## Smallest example
