@@ -52,13 +52,7 @@ bun run fallow:check
 combines typecheck, lint, format verification, and tests. `bun run fmt` formats
 source files with OXFmt when a change needs formatting.
 
-`bun run fallow:check` passes for the changed-file audit. `bun run fallow`
-currently fails on three functions: `apps/video-chunker-cli/src/main.ts:24`
-(`main`) is the first, followed by
-`packages/youtube/video-processor/src/domain/normalize.ts:27`
-(`assertTimeRange`) and `apps/video-chunker-cli/src/reporter.ts:36`
-(`onProgress`). A separate code task repairs those functions; remove this note
-when that fix lands.
+`bun run fallow:check` audits the changed files.  audits the whole repository.
 
 ## Build
 
