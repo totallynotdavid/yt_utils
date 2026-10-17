@@ -20,13 +20,13 @@ repository root install dependencies and build before running the importing
 package. The package exports point at `dist`, so the build is required:
 
 ```sh
-bun install
-bun run build:all
+mise run install
+mise run build
 ```
 
 `puppeteer` is an optional peer dependency, only needed for the SVG strategy.
-The workspace already declares it as a development dependency, so `bun install`
-includes it.
+The workspace already declares it as a development dependency, so
+`mise run install` includes it.
 
 ## Smallest example
 

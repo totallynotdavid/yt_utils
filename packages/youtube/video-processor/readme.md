@@ -13,8 +13,8 @@ repository root install dependencies and build before running the importing
 package. The package exports point at `dist`, so the build is required:
 
 ```sh
-bun install
-bun run build:all
+mise run install
+mise run build
 ```
 
 Requires `yt-dlp` and `ffmpeg` on your `PATH`.
