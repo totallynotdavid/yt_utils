@@ -89,6 +89,7 @@ bun run --cwd apps/video-chunker-cli start "https://www.youtube.com/watch?v=dQw4
   with `-c copy`.
 - Chunk length is approximate and depends on keyframe boundaries.
 - Reports download and split progress, then prints chunk durations and sizes.
+  Output is plain text, so terminals, pipes and CI logs match.
 - Supports `--cookies` for login-only or restricted videos.
 - Exposes the workflow as `@ytutils/video-chunker`, while the CLI stays in
   `@ytutils/video-chunker-cli`.
