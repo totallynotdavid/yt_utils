@@ -23,7 +23,6 @@ const hasMediaBinaries = [defaultBinaries.ffmpeg, defaultBinaries.ffprobe].every
   return !isErrnoException(err) || err.code !== 'ENOENT'
 })
 
-// Run a rejecting call and assert it surfaced the expected typed VideoError.
 async function expectVideoError(work: Promise<unknown>, code: VideoErrorCode): Promise<void> {
   const error = await work.then(
     () => null,
@@ -34,7 +33,6 @@ async function expectVideoError(work: Promise<unknown>, code: VideoErrorCode): P
 }
 
 describe.runIf(hasMediaBinaries)('video chunker media operations', () => {
-  // Generate a short local clip so the tests never touch the network.
   beforeAll(async () => {
     dir = await mkdtemp(join(tmpdir(), 'split-'))
     sourcePath = join(dir, 'source.mp4')
@@ -80,7 +78,6 @@ describe.runIf(hasMediaBinaries)('video chunker media operations', () => {
       },
     })
 
-    // 25s split at 10s -> 3 chunks
     expect(chunks).toHaveLength(3)
     expect(chunks.every((c) => c.sizeBytes > 0)).toBe(true)
     expect(chunks.every((c) => c.durationSeconds > 0)).toBe(true)
@@ -92,7 +89,6 @@ describe.runIf(hasMediaBinaries)('video chunker media operations', () => {
     const path = join(reuse, 'source.mp4')
     await copyFile(sourcePath, path)
 
-    // First run produces more files (25s / 5s) than the second (25s / 10s).
     const first = await splitVideo(path, { outDir: reuse, chunkSeconds: 5 })
     expect(first.length).toBeGreaterThan(3)
 

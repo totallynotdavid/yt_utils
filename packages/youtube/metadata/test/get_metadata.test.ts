@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { HttpClient, HttpRequest, HttpResponse } from '@ytutils/core'
 
@@ -27,6 +27,10 @@ function jsonResponse(payload: unknown): HttpResponse {
 }
 
 describe('getMetadata', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
   it('returns idOnly for direct video url', async () => {
     const result = await getMetadata('https://www.youtube.com/watch?v=dQw4w9WgXcQ', {
       fetchType: 'idOnly',
@@ -71,6 +75,8 @@ describe('getMetadata', () => {
   })
 
   it('throws INVALID_INPUT when API key is missing for search queries', async () => {
+    vi.stubEnv('YOUTUBE_API_KEY', '')
+
     await expect(getMetadata('some search query')).rejects.toMatchObject({
       code: 'INVALID_INPUT',
     })

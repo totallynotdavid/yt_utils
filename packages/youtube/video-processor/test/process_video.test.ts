@@ -1,70 +1,73 @@
-import { describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { mkdtemp, rm, stat } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
+import { defaultVideoProcessorConfig } from '../src/domain/config'
+import type { CommandRunner } from '../src/infra/command'
 import { processVideo } from '../src'
 
-describe('processVideo', () => {
-  it('downloads audio and returns one artifact when format matches', async () => {
-    const result = await processVideo(
-      { videoId: 'dQw4w9WgXcQ', format: 'opus', outputDir: './tmp-out' },
-      undefined,
-      {
-        runner: { run: async () => ({ stdout: '', stderr: '' }) },
-        ensureDirectoryExists: async () => {},
-        downloadWithYtDlp: async () => '/tmp-out/dQw4w9WgXcQ.opus',
-        convertWithFfmpeg: async () => '/tmp-out/dQw4w9WgXcQ.opus',
-      }
-    )
+let root: string
 
-    expect(result.artifacts).toHaveLength(1)
-    expect(result.artifacts[0]?.format).toBe('opus')
-  })
-
-  it('converts when downloaded format is different', async () => {
-    const result = await processVideo(
-      { videoId: 'dQw4w9WgXcQ', format: 'mp4', outputDir: './tmp-out' },
-      undefined,
-      {
-        runner: { run: async () => ({ stdout: '', stderr: '' }) },
-        ensureDirectoryExists: async () => {},
-        downloadWithYtDlp: async () => '/tmp-out/dQw4w9WgXcQ.webm',
-        convertWithFfmpeg: async () => '/tmp-out/dQw4w9WgXcQ.mp4',
-      }
-    )
-
-    expect(result.artifacts).toHaveLength(2)
-    expect(result.artifacts[1]?.format).toBe('mp4')
-  })
+beforeAll(async () => {
+  root = await mkdtemp(join(tmpdir(), 'process-video-'))
 })
 
-describe('CommandRunner shell injection', () => {
-  it('passes shell metacharacters in outputDir as a single argv element, not split by a shell', async () => {
-    const captured: string[][] = []
-    const maliciousOutputDir = '$(touch /tmp/yt-utils-pwn)/x'
+afterAll(async () => {
+  await rm(root, { recursive: true, force: true })
+})
 
-    const realDownloadWithYtDlp = (await import('../src/infra/ytdlp.js')).downloadWithYtDlp
+function fakeRunner(downloaded: string): { runner: CommandRunner; commands: string[][] } {
+  const commands: string[][] = []
+  const runner: CommandRunner = {
+    async run(argv) {
+      commands.push(argv)
+      return { stdout: argv[0] === 'yt-dlp' ? `${downloaded}\n` : '', stderr: '' }
+    },
+  }
+  return { runner, commands }
+}
 
-    await processVideo(
-      { videoId: 'dQw4w9WgXcQ', format: 'opus', outputDir: maliciousOutputDir },
-      undefined,
-      {
-        runner: {
-          run: async (argv) => {
-            captured.push(argv)
-            return {
-              stdout: '/tmp-out/dQw4w9WgXcQ.opus\n',
-              stderr: '',
-            }
-          },
-        },
-        ensureDirectoryExists: async () => {},
-        downloadWithYtDlp: realDownloadWithYtDlp,
-        convertWithFfmpeg: async () => '/tmp-out/dQw4w9WgXcQ.opus',
-      }
+describe('processVideo', () => {
+  it('creates the output directory and returns one artifact in the requested format', async () => {
+    const outputDir = join(root, 'audio')
+    const { runner, commands } = fakeRunner(join(outputDir, 'dQw4w9WgXcQ.opus'))
+
+    const result = await processVideo(
+      { videoId: 'dQw4w9WgXcQ', format: 'opus', outputDir },
+      defaultVideoProcessorConfig,
+      runner
     )
 
-    expect(captured).toHaveLength(1)
-    const argv = captured[0]
-    const matches = argv.filter((a) => a.includes(maliciousOutputDir))
-    expect(matches).toHaveLength(1)
+    expect((await stat(outputDir)).isDirectory()).toBe(true)
+    expect(result.artifacts).toEqual([
+      { kind: 'audio', format: 'opus', path: join(outputDir, 'dQw4w9WgXcQ.opus') },
+    ])
+    expect(commands.map((argv) => argv[0])).toEqual(['yt-dlp'])
+  })
+
+  it('converts with ffmpeg when the downloaded format differs', async () => {
+    const outputDir = join(root, 'video')
+    const { runner, commands } = fakeRunner(join(outputDir, 'dQw4w9WgXcQ.webm'))
+
+    const result = await processVideo(
+      { videoId: 'dQw4w9WgXcQ', format: 'mp4', outputDir },
+      defaultVideoProcessorConfig,
+      runner
+    )
+
+    expect(result.artifacts.map((artifact) => artifact.format)).toEqual(['webm', 'mp4'])
+    expect(result.artifacts[1]?.path).toBe(join(outputDir, 'dQw4w9WgXcQ.mp4'))
+    expect(commands[1]).toEqual([
+      'ffmpeg',
+      '-y',
+      '-i',
+      join(outputDir, 'dQw4w9WgXcQ.webm'),
+      '-c:v',
+      'libx264',
+      '-c:a',
+      'aac',
+      join(outputDir, 'dQw4w9WgXcQ.mp4'),
+    ])
   })
 })

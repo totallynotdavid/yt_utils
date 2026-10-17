@@ -3,110 +3,95 @@ import type { HttpClient } from '@ytutils/core'
 
 import { getMostReplayed } from '../src'
 
-describe('getMostReplayed', () => {
-  it('uses json markers when available', async () => {
-    const result = await getMostReplayed(
-      'dQw4w9WgXcQ',
-      { parts: 1 },
-      {
-        getJsonMarkersForVideo: async () => [
-          { startMillis: 1000, durationMillis: 1000, intensityScoreNormalized: 1 },
-          { startMillis: 2000, durationMillis: 1000, intensityScoreNormalized: 0.5 },
+function watchPageClient(html: string, requestedUrls: string[] = []): HttpClient {
+  return {
+    async request(req) {
+      requestedUrls.push(req.url)
+      return { status: 200, ok: true, text: html, json: null }
+    },
+  }
+}
+
+function watchPageWithMarkers(markers: Array<{ startMillis: string; durationMillis: string }>) {
+  const payload = {
+    frameworkUpdates: {
+      entityBatchUpdate: {
+        mutations: [
+          {
+            payload: {
+              macroMarkersListEntity: {
+                markersList: {
+                  markerType: 'MARKER_TYPE_HEATMAP',
+                  markers: markers.map((marker, index) => ({
+                    ...marker,
+                    heatMarkerIntensityScoreNormalized: 1 - index / 2,
+                  })),
+                },
+              },
+            },
+          },
         ],
-        getSvgMarkersForVideo: async () => ({ markers: [], durationSec: 0 }),
-      }
+      },
+    },
+  }
+  return `<script>var ytInitialPlayerResponse = ${JSON.stringify(payload)};</script>`
+}
+
+const noMarkersPage = '<html><script>var ytInitialPlayerResponse = {};</script></html>'
+
+const svgMarkers = {
+  durationSec: 10,
+  markers: [{ startMillis: 0, durationMillis: 1000, intensityScoreNormalized: 1 }],
+}
+
+describe('getMostReplayed', () => {
+  it('extracts json markers from the watch page fetched through the http client', async () => {
+    const requestedUrls: string[] = []
+    const httpClient = watchPageClient(
+      watchPageWithMarkers([
+        { startMillis: '1000', durationMillis: '1000' },
+        { startMillis: '2000', durationMillis: '1000' },
+      ]),
+      requestedUrls
     )
 
+    const result = await getMostReplayed('dQw4w9WgXcQ', { parts: 1, httpClient })
+
+    expect(requestedUrls).toEqual(['https://www.youtube.com/watch?v=dQw4w9WgXcQ'])
     expect(result.source).toBe('json')
     expect(result.durationSec).toBe(3)
-    expect(result.segments.length).toBe(1)
+    expect(result.segments).toHaveLength(1)
   })
 
-  it('falls back to svg when allowed and json is empty', async () => {
+  it('falls back to svg when allowed and the page has no json markers', async () => {
     const result = await getMostReplayed(
       'dQw4w9WgXcQ',
-      { allowSvgFallback: true },
-      {
-        getJsonMarkersForVideo: async () => [],
-        getSvgMarkersForVideo: async () => ({
-          durationSec: 10,
-          markers: [{ startMillis: 0, durationMillis: 1000, intensityScoreNormalized: 1 }],
-        }),
-      }
+      { allowSvgFallback: true, httpClient: watchPageClient(noMarkersPage) },
+      { getSvgMarkersForVideo: async () => svgMarkers }
     )
 
     expect(result.source).toBe('svg')
     expect(result.durationSec).toBe(10)
   })
 
-  it('uses the provided http client for default json extraction', async () => {
-    const html = `<script>var ytInitialPlayerResponse = ${JSON.stringify({
-      frameworkUpdates: {
-        entityBatchUpdate: {
-          mutations: [
-            {
-              payload: {
-                macroMarkersListEntity: {
-                  markersList: {
-                    markerType: 'MARKER_TYPE_HEATMAP',
-                    markers: [
-                      {
-                        startMillis: '1000',
-                        durationMillis: '1000',
-                        heatMarkerIntensityScoreNormalized: 1,
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          ],
-        },
-      },
-    })};</script>`
+  it('uses svg without reading the watch page when strategy is svg', async () => {
     const requestedUrls: string[] = []
-    const httpClient: HttpClient = {
-      async request(req) {
-        requestedUrls.push(req.url)
-        return {
-          status: 200,
-          ok: true,
-          text: html,
-          json: null,
-        }
-      },
-    }
+    const result = await getMostReplayed(
+      'dQw4w9WgXcQ',
+      { strategy: 'svg', httpClient: watchPageClient(noMarkersPage, requestedUrls) },
+      { getSvgMarkersForVideo: async () => svgMarkers }
+    )
 
-    const result = await getMostReplayed('dQw4w9WgXcQ', { parts: 1, httpClient })
-
-    expect(requestedUrls).toEqual(['https://www.youtube.com/watch?v=dQw4w9WgXcQ'])
-    expect(result.source).toBe('json')
-    expect(result.durationSec).toBe(2)
+    expect(result.source).toBe('svg')
+    expect(requestedUrls).toEqual([])
   })
 
-  it('throws NOT_FOUND when strategy=json and no markers', async () => {
+  it.each([
+    ['strategy is json', { strategy: 'json' }],
+    ['auto is used and svg fallback is disabled', {}],
+  ] as const)('throws NOT_FOUND when %s and the page has no markers', async (_name, options) => {
     await expect(
-      getMostReplayed(
-        'dQw4w9WgXcQ',
-        { strategy: 'json' },
-        {
-          getJsonMarkersForVideo: async () => [],
-          getSvgMarkersForVideo: async () => ({ markers: [], durationSec: 0 }),
-        }
-      )
-    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
-  })
-
-  it('throws NOT_FOUND when auto and svg fallback is disabled', async () => {
-    await expect(
-      getMostReplayed(
-        'dQw4w9WgXcQ',
-        {},
-        {
-          getJsonMarkersForVideo: async () => [],
-          getSvgMarkersForVideo: async () => ({ markers: [], durationSec: 0 }),
-        }
-      )
+      getMostReplayed('dQw4w9WgXcQ', { ...options, httpClient: watchPageClient(noMarkersPage) })
     ).rejects.toMatchObject({ code: 'NOT_FOUND' })
   })
 })

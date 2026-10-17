@@ -17,56 +17,30 @@ class FakeHttpClient implements HttpClient {
   }
 }
 
-function jsonResponse(payload: unknown): HttpResponse {
-  return {
-    status: 200,
-    ok: true,
-    text: JSON.stringify(payload),
-    json: payload,
+function videoResponse(durationIso: string): HttpResponse {
+  const payload = {
+    items: [{ contentDetails: { duration: durationIso }, snippet: {}, statistics: {} }],
   }
+  return { status: 200, ok: true, text: JSON.stringify(payload), json: payload }
 }
 
 describe('getDuration', () => {
-  it('returns clock format by default', async () => {
-    const client = new FakeHttpClient([
-      jsonResponse({
-        items: [
-          {
-            contentDetails: { duration: 'PT1H30S' },
-            snippet: {},
-            statistics: {},
-          },
-        ],
-      }),
-    ])
-
-    const result = await getDuration('https://www.youtube.com/watch?v=dQw4w9WgXcQ', {
+  it.each([
+    [
+      'clock by default',
+      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      undefined,
+      'PT1H30S',
+      '01:00:30',
+    ],
+    ['seconds when requested', 'dQw4w9WgXcQ', 'seconds', 'PT3M33S', 213],
+  ] as const)('returns %s', async (_name, input, format, durationIso, expected) => {
+    const result = await getDuration(input, {
+      format,
       apiKey: 'test-key',
-      httpClient: client,
+      httpClient: new FakeHttpClient([videoResponse(durationIso)]),
     })
 
-    expect(result).toBe('01:00:30')
-  })
-
-  it('returns seconds format when requested', async () => {
-    const client = new FakeHttpClient([
-      jsonResponse({
-        items: [
-          {
-            contentDetails: { duration: 'PT3M33S' },
-            snippet: {},
-            statistics: {},
-          },
-        ],
-      }),
-    ])
-
-    const result = await getDuration('dQw4w9WgXcQ', {
-      format: 'seconds',
-      apiKey: 'test-key',
-      httpClient: client,
-    })
-
-    expect(result).toBe(213)
+    expect(result).toBe(expected)
   })
 })
