@@ -6,7 +6,7 @@ export interface CommandRunner {
   run(argv: string[]): Promise<{ stdout: string; stderr: string }>
 }
 
-export const ShellCommandRunner: CommandRunner = {
+export const spawnCommandRunner: CommandRunner = {
   run(argv: string[]): Promise<{ stdout: string; stderr: string }> {
     const [command, ...args] = argv
     if (command === undefined) {

@@ -1,40 +1,24 @@
+import { mkdir } from 'node:fs/promises'
 import { extname, resolve } from 'node:path'
 
 import { defaultVideoProcessorConfig } from '../domain/config'
 import { normalizeProcessVideoRequest } from '../domain/normalize'
 import type { ProcessVideoRequest, ProcessVideoResult, VideoProcessorConfig } from '../domain/types'
-import { ShellCommandRunner, type CommandRunner } from '../infra/command'
+import { spawnCommandRunner, type CommandRunner } from '../infra/command'
 import { convertWithFfmpeg } from '../infra/ffmpeg'
-import { ensureDirectoryExists } from '../infra/fs'
 import { downloadWithYtDlp } from '../infra/ytdlp'
-
-export type ProcessVideoDeps = {
-  runner: CommandRunner
-  ensureDirectoryExists: (path: string) => Promise<void>
-  downloadWithYtDlp: typeof downloadWithYtDlp
-  convertWithFfmpeg: typeof convertWithFfmpeg
-}
-
-const defaultDeps: ProcessVideoDeps = {
-  runner: ShellCommandRunner,
-  ensureDirectoryExists,
-  downloadWithYtDlp,
-  convertWithFfmpeg,
-}
 
 export async function processVideo(
   request: ProcessVideoRequest,
   config: VideoProcessorConfig = defaultVideoProcessorConfig,
-  deps: ProcessVideoDeps = defaultDeps
+  runner: CommandRunner = spawnCommandRunner
 ): Promise<ProcessVideoResult> {
   const normalized = normalizeProcessVideoRequest(request, config)
   const outputDir = resolve(normalized.outputDir)
 
-  await deps.ensureDirectoryExists(outputDir)
+  await mkdir(outputDir, { recursive: true })
 
-  const downloadedPath = resolve(
-    await deps.downloadWithYtDlp({ ...normalized, outputDir }, deps.runner)
-  )
+  const downloadedPath = resolve(await downloadWithYtDlp({ ...normalized, outputDir }, runner))
 
   const currentFormat = extname(downloadedPath).slice(1)
   const artifacts: ProcessVideoResult['artifacts'] = [
@@ -47,7 +31,7 @@ export async function processVideo(
 
   if (currentFormat !== normalized.format) {
     const convertedPath = resolve(
-      await deps.convertWithFfmpeg(downloadedPath, normalized.format, normalized.kind, deps.runner)
+      await convertWithFfmpeg(downloadedPath, normalized.format, normalized.kind, runner)
     )
 
     artifacts.push({

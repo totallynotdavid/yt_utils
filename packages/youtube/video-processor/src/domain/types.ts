@@ -31,7 +31,6 @@ export type ProcessVideoResult = {
 export type VideoProcessorConfig = {
   defaults: {
     audioFormat: AudioFormat
-    videoFormat: VideoFormat
     audioQuality: Quality
     videoQuality: Quality
     outputDir: string
