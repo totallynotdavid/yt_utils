@@ -1,4 +1,4 @@
-import { markersFromSvg } from '../svg'
+import { markersFromSvg } from '../svg/heatmap_markers'
 import type { ReplayMarker } from '../types'
 import { extractHeatmapSvgFromPage, withYoutubePage } from '../capture/browser_heatmap'
 

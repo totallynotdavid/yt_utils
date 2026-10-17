@@ -21,7 +21,7 @@ function segmentFromCandidate(
   }
 }
 
-export function selectNonOverlappingSegments(
+function selectNonOverlappingSegments(
   candidates: PeakCandidate[],
   valuesLength: number,
   parts: number

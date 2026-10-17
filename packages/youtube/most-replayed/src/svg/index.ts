@@ -1,7 +1,0 @@
-export { extractDurationFromProgressAria } from '../capture/duration'
-export { extractPathDAttributes } from './path_data'
-export { parseSvgPathCommands, type SvgPathCommand } from './path_commands'
-export { commandsToPoints, stitchPathPointGroups as stitchPaths, type Point } from './path_points'
-export { tokenizeSvgPath, type SvgPathToken } from './path_tokens'
-export { markersFromSvg } from './heatmap_markers'
-export { maxDurationFromMarkers, topSegmentsFromMarkers } from '../ranking'

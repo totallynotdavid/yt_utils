@@ -1,21 +1,18 @@
+import type { HttpClient } from '@ytutils/core'
 import { parseVideoId, YtUtilsError } from '@ytutils/core'
 
 import { normalizeGetMostReplayedOptions } from '../boundary'
 import { getJsonMarkersForVideo } from '../infra/json_strategy'
 import { getSvgMarkersForVideo } from '../infra/svg_strategy'
-import { maxDurationFromMarkers, topSegmentsFromMarkers } from '../svg'
+import { topSegmentsFromMarkers } from '../ranking/segments'
+import { maxDurationFromMarkers } from '../ranking/timeline'
 import type { GetMostReplayedOptions, MostReplayedResult, ReplayMarker } from '../types'
 
 export type MostReplayedDeps = {
-  getJsonMarkersForVideo: (videoId: string) => Promise<ReplayMarker[]>
+  getJsonMarkersForVideo: (videoId: string, httpClient?: HttpClient) => Promise<ReplayMarker[]>
   getSvgMarkersForVideo: (
     videoId: string
   ) => Promise<{ markers: ReplayMarker[]; durationSec: number }>
-}
-
-const defaultDeps: MostReplayedDeps = {
-  getJsonMarkersForVideo,
-  getSvgMarkersForVideo,
 }
 
 function buildResultFromMarkers(
@@ -33,8 +30,12 @@ function buildResultFromMarkers(
   }
 }
 
-async function buildSvgResult(videoId: string, parts: number, deps: MostReplayedDeps) {
-  const svgResult = await deps.getSvgMarkersForVideo(videoId)
+async function buildSvgResult(
+  videoId: string,
+  parts: number,
+  getSvgMarkers: MostReplayedDeps['getSvgMarkersForVideo']
+) {
+  const svgResult = await getSvgMarkers(videoId)
   if (svgResult.markers.length === 0) {
     throw new YtUtilsError('NOT_FOUND', 'No replay markers could be parsed from SVG heatmap')
   }
@@ -45,20 +46,18 @@ async function buildSvgResult(videoId: string, parts: number, deps: MostReplayed
 export async function getMostReplayed(
   videoId: string,
   options?: GetMostReplayedOptions,
-  deps?: MostReplayedDeps
+  deps: Partial<MostReplayedDeps> = {}
 ): Promise<MostReplayedResult> {
   parseVideoId(videoId)
   const normalized = normalizeGetMostReplayedOptions(options)
-  const resolvedDeps = deps ?? defaultDeps
+  const getJsonMarkers = deps.getJsonMarkersForVideo ?? getJsonMarkersForVideo
+  const getSvgMarkers = deps.getSvgMarkersForVideo ?? getSvgMarkersForVideo
 
   if (normalized.strategy === 'svg') {
-    return buildSvgResult(videoId, normalized.parts, resolvedDeps)
+    return buildSvgResult(videoId, normalized.parts, getSvgMarkers)
   }
 
-  const jsonMarkers =
-    deps === undefined
-      ? await getJsonMarkersForVideo(videoId, normalized.httpClient)
-      : await deps.getJsonMarkersForVideo(videoId)
+  const jsonMarkers = await getJsonMarkers(videoId, normalized.httpClient)
   if (jsonMarkers.length > 0) {
     return buildResultFromMarkers(
       videoId,
@@ -80,5 +79,5 @@ export async function getMostReplayed(
     )
   }
 
-  return buildSvgResult(videoId, normalized.parts, resolvedDeps)
+  return buildSvgResult(videoId, normalized.parts, getSvgMarkers)
 }

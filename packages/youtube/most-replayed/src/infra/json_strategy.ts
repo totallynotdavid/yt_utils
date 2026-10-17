@@ -1,6 +1,6 @@
 import type { HttpClient } from '@ytutils/core'
 import type { ReplayMarker } from '../types'
-import { extractJsonMarkersCurrentFromHtml } from '../json'
+import { extractJsonMarkersFromHtml } from '../json/json_extract'
 import { fetchWatchHtml } from '../capture/watch_html'
 
 export async function getJsonMarkersForVideo(
@@ -8,5 +8,5 @@ export async function getJsonMarkersForVideo(
   httpClient?: HttpClient
 ): Promise<ReplayMarker[]> {
   const html = await fetchWatchHtml(videoId, { httpClient })
-  return extractJsonMarkersCurrentFromHtml(html)
+  return extractJsonMarkersFromHtml(html)
 }
