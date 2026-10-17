@@ -1,6 +1,8 @@
 {
+  "printWidth": 80,
+  "proseWrap": "always",
   "semi": false,
   "singleQuote": true,
   "trailingComma": "es5",
-  "lineWidth": 100
+  "overrides": [{ "files": ["**/*.ts"], "options": { "printWidth": 100 } }]
 }
