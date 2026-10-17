@@ -1,5 +1,3 @@
-// Runs yt-dlp to download one video and return its path and title.
-
 import { spawn, spawnSync } from 'node:child_process'
 
 import type { Binaries } from './binaries'
@@ -39,7 +37,6 @@ function asNumber(token: string | undefined): number | null {
   return Number.isFinite(value) ? value : null
 }
 
-/** Download one video into outDir and return the output path and title. */
 export async function fetchVideo(url: string, opts: FetchOptions): Promise<FetchedSource> {
   const binaries = resolveBinaries(opts.binaries)
   verifyBinaries(binaries, ['ytdlp', 'ffmpeg'])
@@ -61,7 +58,8 @@ export async function fetchVideo(url: string, opts: FetchOptions): Promise<Fetch
     'after_move:FILE|%(filepath)s',
     '-o',
     `${opts.outDir}/source.%(ext)s`,
-    // fetch the EJS challenge solver from GitHub if it isn't bundled
+    // Downloads the EJS challenge solver from GitHub at run time if yt-dlp does
+    // not bundle it.
     '--remote-components',
     'ejs:github',
   ]

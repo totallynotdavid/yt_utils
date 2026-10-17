@@ -1,8 +1,3 @@
-// Default workflow: URL in, chunks out.
-// This function validates inputs, verifies binaries, runs fetch/probe/split,
-// and converts raw step progress into one RunEvent stream.
-// Call fetchVideo/probe/splitVideo directly when you need a custom flow.
-
 import { mkdir, rm } from 'node:fs/promises'
 
 import type { Binaries } from './binaries'
@@ -37,7 +32,6 @@ export async function run(req: ChunkRequest, opts: RunOptions = {}): Promise<Chu
   validateRequest(req)
 
   const binaries = resolveBinaries(opts.binaries)
-  // Fail fast before download if any required binary is missing.
   verifyBinaries(binaries)
   await mkdir(req.outDir, { recursive: true })
 
@@ -86,7 +80,6 @@ export async function run(req: ChunkRequest, opts: RunOptions = {}): Promise<Chu
   })
   emit({ type: 'stage:done', stage: 'split' })
 
-  // Keep source-file lifecycle at the workflow boundary.
   if (req.keepSource !== true) await rm(source.path, { force: true })
   return { source, chunks, outDir: req.outDir }
 }

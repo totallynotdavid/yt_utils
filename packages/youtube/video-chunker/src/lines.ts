@@ -1,6 +1,3 @@
-// Read a process stream line-by-line.
-// Shared by yt-dlp and ffmpeg readers to handle partial buffered chunks.
-
 export async function eachLine(
   stream: AsyncIterable<Uint8Array | string>,
   onLine: (line: string) => void

@@ -50,8 +50,6 @@ async function hoverProgressBar(page: Page): Promise<void> {
   await page.mouse.move(progressBarBox.x + progressBarBox.width * 0.75, y)
 }
 
-// Keep the package's error contract: raw puppeteer failures carry no
-// YtUtilsError code, so map them onto one before they reach callers.
 function toYtUtilsError(error: unknown): YtUtilsError {
   const message = error instanceof Error ? error.message : String(error)
   if (error instanceof Error && error.name === 'TimeoutError') {
@@ -89,6 +87,8 @@ export async function withYoutubePage<T>(
     }
   } catch (error) {
     if (error instanceof YtUtilsError || error instanceof MissingPuppeteerError) throw error
+    // Raw puppeteer failures carry no YtUtilsError code, so map them onto one
+    // before they reach callers.
     throw toYtUtilsError(error)
   }
 }

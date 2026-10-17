@@ -1,17 +1,11 @@
-// Progress has two layers:
-// - raw progress reported by each tool
-// - run events that add computed percentages
-// Formatting (MB, HH:MM:SS) stays outside core.
-
 import type { Source, Chunk } from './media'
 
-/** Raw download progress from yt-dlp. */
 export interface FetchProgress {
   receivedBytes: number
   totalBytes: number | null
 }
 
-/** Raw split progress from ffmpeg. There is no total, so no percent. */
+// ffmpeg reports no total while splitting, so there is no percent here.
 export interface SplitProgress {
   processedSeconds: number
 }

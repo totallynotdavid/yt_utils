@@ -2,9 +2,6 @@ function digits(group: string | undefined): number {
   return group === undefined ? 0 : Number(group)
 }
 
-// Parse a duration string from command-line input into seconds.
-// Accepted forms: "3600", "1h", "90m", "45s", "1h30m".
-// Reject partial matches like "1h banana" or "1h2x".
 export function parseDuration(input: string): number {
   const trimmed = input.trim()
 

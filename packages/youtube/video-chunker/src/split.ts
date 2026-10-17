@@ -1,16 +1,3 @@
-// Split a media file into fixed-length chunks with ffmpeg's segment muxer.
-//
-// `-c copy` means no re-encoding, so splitting a multi-GB file takes seconds.
-// The trade-off is that cuts land on the nearest keyframe before each target
-// time, so a chunk's real length is approximately (not exactly) chunkSeconds.
-// That is the right default for hour-long chunks.
-//
-// We learn which files were written from ffmpeg's `-segment_list` manifest, not
-// by scanning the output directory, so a previous run's leftover chunks can
-// never leak into this run's result.
-//
-// Boundary module: spawns ffmpeg, reads the files it wrote.
-
 import { spawn } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
 import { readFile, rm, stat } from 'node:fs/promises'
@@ -130,7 +117,10 @@ async function collectChunks(
   return chunks
 }
 
-/** Split media into fixed-length chunk files under `outDir`. */
+// `-c copy` avoids re-encoding, so cuts land on the nearest keyframe before each
+// target time and a chunk's length is approximately `chunkSeconds`. Written
+// files come from ffmpeg's `-segment_list` manifest, never a directory scan, so
+// a previous run's leftover chunks cannot leak into the result.
 export async function splitVideo(inputPath: string, opts: SplitOptions): Promise<Chunk[]> {
   const binaries = resolveBinaries(opts.binaries)
   verifyBinaries(binaries, ['ffmpeg', 'ffprobe'])

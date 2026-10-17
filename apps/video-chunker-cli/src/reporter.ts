@@ -1,6 +1,3 @@
-// CLI reporter for progress events.
-// Prints stage headings, throttled progress lines, and a final summary.
-// Output stays plain text so terminal, pipes, and CI logs match.
 import type { ChunkResult, OnProgress } from '@ytutils/video-chunker'
 
 import { formatSourceInfo, formatSummary, progressDetail } from './format'
@@ -11,7 +8,6 @@ export interface Reporter {
   fail(message: string): void
 }
 
-// Stage headings to print.
 const HEADINGS: Record<string, string> = {
   fetch: 'Downloading',
   probe: 'Reading video info',

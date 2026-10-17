@@ -1,6 +1,3 @@
-// External binaries used by the workflow.
-// Callers can override paths; defaults resolve from PATH.
-
 import { spawnSync } from 'node:child_process'
 
 import { VideoError, isErrnoException } from './errors'
@@ -19,12 +16,10 @@ export const defaultBinaries: Binaries = {
 
 const ALL_ROLES = ['ffmpeg', 'ffprobe', 'ytdlp'] as const
 
-/** Fill in PATH defaults for any binary the caller did not override. */
 export function resolveBinaries(overrides?: Partial<Binaries>): Binaries {
   return { ...defaultBinaries, ...overrides }
 }
 
-/** Fail fast with an actionable error if a required program is missing. */
 export function verifyBinaries(
   binaries: Binaries,
   roles: readonly (keyof Binaries)[] = ALL_ROLES

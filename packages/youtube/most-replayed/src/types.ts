@@ -26,10 +26,5 @@ export type GetMostReplayedOptions = {
   parts?: number
   strategy?: ExtractionStrategy
   allowSvgFallback?: boolean
-  /**
-   * Optional HTTP client used to fetch the YouTube watch page. Provide one to
-   * control timeouts, headers, proxy behavior, or to stub network calls in
-   * tests.
-   */
   httpClient?: HttpClient
 }

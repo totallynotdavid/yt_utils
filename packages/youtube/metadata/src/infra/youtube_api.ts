@@ -7,8 +7,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object'
 }
 
-// Pull the first item out of an `items: unknown[]`-shaped payload, or
-// `undefined` if the payload is missing/empty.
 function pickFirstItem(json: unknown): Record<string, unknown> | undefined {
   if (!isRecord(json)) return undefined
   const items = json['items']

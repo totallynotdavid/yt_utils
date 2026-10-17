@@ -1,5 +1,3 @@
-// Runs ffprobe to read media duration and file size.
-
 import { spawn } from 'node:child_process'
 import { stat } from 'node:fs/promises'
 
@@ -43,7 +41,6 @@ export async function readDurationSeconds(path: string, ffprobe: string): Promis
   return seconds
 }
 
-/** Return duration and size for a media file. */
 export async function probe(path: string, opts: ProbeOptions = {}): Promise<MediaInfo> {
   const binaries = resolveBinaries(opts.binaries)
   verifyBinaries(binaries, ['ffprobe'])

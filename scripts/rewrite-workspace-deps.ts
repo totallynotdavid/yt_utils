@@ -23,7 +23,6 @@ async function readManifest(path: string): Promise<Record<string, unknown>> {
   return parsed
 }
 
-// name -> version for every workspace package, resolved from their manifests.
 async function collectWorkspaceVersions(): Promise<Map<string, string>> {
   const versions = new Map<string, string>()
   for await (const manifestPath of glob('{packages/*/*,apps/*}/package.json')) {
