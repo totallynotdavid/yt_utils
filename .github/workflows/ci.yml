@@ -6,28 +6,28 @@ on:
     branches:
       - master
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
-  quality:
+  check:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version-file: package.json
+      - uses: jdx/mise-action@v5
 
       - name: Install media binaries for the video-chunker test suite
         run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
 
-      - run: bun install --frozen-lockfile
+      - run: mise run install
 
-      - run: bun run check
-
-      - name: Verify every package builds
-        run: bun run build:all
+      - run: mise run check
