@@ -62,9 +62,7 @@ Build every package and the CLI:
 mise run build
 ```
 
-`build` builds the six library packages and the CLI. The private
-`tools/most-replayed-maintainer` workspace has a typecheck script but no build
-script, so the root build intentionally excludes it.
+`build` builds the six library packages and the CLI.
 
 ## Package checks and release
 

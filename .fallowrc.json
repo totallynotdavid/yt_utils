@@ -10,12 +10,7 @@
     "vitest.config.ts",
     "scripts/*.ts"
   ],
-  "ignorePatterns": [
-    "**/node_modules/**",
-    "**/dist/**",
-    "**/coverage/**",
-    "tools/most-replayed-maintainer/**"
-  ],
+  "ignorePatterns": ["**/node_modules/**", "**/dist/**", "**/coverage/**"],
   "ignoreDependencies": [
     "bunup",
     "oxfmt",

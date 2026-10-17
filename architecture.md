@@ -2,9 +2,8 @@
 
 The workspace separates YouTube reference parsing, API access, replay
 extraction, media processing, and video chunking. Library packages expose their
-public surface from `src/index.ts`. The CLI starts at `src/bin.ts`, and the
-maintainer tool has its own internal modules. Each package README owns the
-caller-facing contract.
+public surface from `src/index.ts`. The CLI starts at `src/bin.ts`. Each package
+README owns the caller-facing contract.
 
 ## Workspace map
 
@@ -17,7 +16,6 @@ caller-facing contract.
 | [`packages/youtube/video-processor`](./packages/youtube/video-processor) | Normalizes one processing request, invokes `yt-dlp`, and converts the result with `ffmpeg` when needed. |
 | [`packages/youtube/video-chunker`](./packages/youtube/video-chunker)     | Downloads one URL, probes its media, and splits it with `ffmpeg`'s segment muxer.                       |
 | [`apps/video-chunker-cli`](./apps/video-chunker-cli)                     | Parses CLI arguments and formats chunk workflow progress and summaries.                                 |
-| [`tools/most-replayed-maintainer`](./tools/most-replayed-maintainer)     | Captures, compares, diagnoses, and evaluates saved replay-extraction artifacts.                         |
 
 ## Dependency direction
 
@@ -26,8 +24,7 @@ caller-facing contract.
 ├── @ytutils/metadata
 ├── @ytutils/duration
 ├── @ytutils/most-replayed
-├── @ytutils/video-processor
-└── @ytutils/most-replayed-maintainer
+└── @ytutils/video-processor
 
 @ytutils/metadata
 └── @ytutils/duration
@@ -37,9 +34,7 @@ caller-facing contract.
 ```
 
 The arrows show workspace package dependency declarations. The CLI delegates
-download, probe, and split to the chunker package. The maintainer tool depends
-on core and imports most-replayed source modules directly for its saved-artifact
-workflows.
+download, probe, and split to the chunker package.
 
 ## Boundaries
 
@@ -88,8 +83,9 @@ normalizes a request, downloads with `yt-dlp`, and converts with `ffmpeg` when
 the downloaded extension differs from the requested format. The default
 configuration is defined in
 [`config.ts`](./packages/youtube/video-processor/src/domain/config.ts): Opus
-audio, MP4 video, best quality, the `media` output directory, and 14, 50, and
-200 MB video-size limits for small, medium, and large requests.
+audio when a request omits `format`, best audio and video quality, the `media`
+output directory, and 14, 50, and 200 MB video-size limits for small, medium,
+and large requests.
 
 ### Video chunker and CLI
 

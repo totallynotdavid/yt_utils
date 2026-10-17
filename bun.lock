@@ -71,14 +71,6 @@
         "@ytutils/core": "workspace:*",
       },
     },
-    "tools/most-replayed-maintainer": {
-      "name": "@ytutils/most-replayed-maintainer",
-      "version": "0.0.1",
-      "dependencies": {
-        "@ytutils/core": "workspace:*",
-        "puppeteer": "^25.12.0",
-      },
-    },
   },
   "packages": {
     "@babel/helper-string-parser": ["@babel/helper-string-parser@7.29.7", "", {}, "sha512-Pb5ijPrZ89GDH8223L4UP8i6QApWxs04RbPQJTeWDV0/keR2E36MeKnyr6LYmUUvqRRI+Iv87SuF1W6ErINzYw=="],
@@ -406,8 +398,6 @@
     "@ytutils/metadata": ["@ytutils/metadata@workspace:packages/youtube/metadata"],
 
     "@ytutils/most-replayed": ["@ytutils/most-replayed@workspace:packages/youtube/most-replayed"],
-
-    "@ytutils/most-replayed-maintainer": ["@ytutils/most-replayed-maintainer@workspace:tools/most-replayed-maintainer"],
 
     "@ytutils/video-chunker": ["@ytutils/video-chunker@workspace:packages/youtube/video-chunker"],
 

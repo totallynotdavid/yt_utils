@@ -1,8 +1,0 @@
-# runtime artifacts produced by snapshot/diagnostics tooling
-*.svg
-*.csv
-*.png
-*.html
-*.markers.json
-*.comparison.json
-meta.json

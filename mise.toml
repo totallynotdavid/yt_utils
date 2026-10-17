@@ -11,7 +11,7 @@ run = "bun install --frozen-lockfile"
 
 [tasks."lint:ts"]
 description = "Lint TypeScript with oxlint, type-aware, warnings denied"
-run = "oxlint --deny-warnings packages apps tools scripts"
+run = "oxlint --deny-warnings packages apps scripts"
 
 [tasks."lint:format"]
 description = "Check formatting of source, Markdown, YAML and JSON with oxfmt"
@@ -35,7 +35,7 @@ depends = ["lint:*"]
 
 [tasks."fix:code"]
 description = "Apply safe oxlint fixes and format with oxfmt"
-run = ["oxlint --fix packages apps tools scripts", "oxfmt ."]
+run = ["oxlint --fix packages apps scripts", "oxfmt ."]
 
 [tasks."fix:license"]
 description = "Copy the root LICENSE into every published package"
