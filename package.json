@@ -6,9 +6,9 @@
     "apps/*"
   ],
   "devDependencies": {
-    "@types/node": "^26.6.4",
+    "@types/node": "^26.6.5",
     "bunup": "^0.16.32",
-    "fallow": "^3.32.0",
+    "fallow": "^3.33.1",
     "oxfmt": "^0.72.0",
     "oxlint": "^1.87.0",
     "oxlint-tsgolint": "^7.0.2003",
