@@ -1,7 +1,6 @@
 export type YtUtilsErrorCode =
   | 'INVALID_INPUT'
   | 'NOT_FOUND'
-  | 'RATE_LIMITED'
   | 'UPSTREAM_ERROR'
   | 'PARSING_ERROR'
   | 'DEPENDENCY_MISSING'

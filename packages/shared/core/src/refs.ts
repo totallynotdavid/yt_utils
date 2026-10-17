@@ -1,7 +1,5 @@
 import { assertNonEmptyString, YtUtilsError } from './errors'
 
-export type MediaKind = 'video' | 'playlist' | 'channel'
-
 export type VideoRef = { kind: 'video_id'; value: string } | { kind: 'video_url'; value: string }
 
 export type QueryRef = VideoRef | { kind: 'search_query'; value: string }

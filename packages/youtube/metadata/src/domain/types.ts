@@ -2,8 +2,6 @@ import type { HttpClient } from '@ytutils/core'
 
 export type FetchType = 'idOnly' | 'fullData'
 
-export type MetadataInput = string
-
 export type MetadataResult = {
   mediaId: string
   mediaType: 'video' | 'playlist' | 'channel'
