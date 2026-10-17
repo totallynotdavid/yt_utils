@@ -41,11 +41,11 @@ console.log(artifacts[0].path) // '/abs/path/media/jNQXAC9IVRw.opus'
 - Trim a download with `startTimeSec` and `endTimeSec`.
 - Select audio or video formats and best or worst source quality.
 - Cap video download size and choose the output directory.
-- Inject command and filesystem dependencies for tests.
+- Inject the command runner for tests.
 
 ## API reference
 
-### `processVideo(request, config?, deps?)`
+### `processVideo(request, config?, runner?)`
 
 `request`:
 
@@ -66,8 +66,10 @@ in the requested format, `artifacts` holds both the download and the converted
 file; otherwise it holds just the download.
 
 The default `config` (audio format, qualities, output dir, size caps) can be
-overridden by passing a second argument, and every external process is
-injectable through `deps` for testing.
+overridden by passing a second argument. Every external process (yt-dlp and
+ffmpeg) runs through `runner`, an object with
+`run(argv: string[]): Promise<{ stdout: string; stderr: string }>` that defaults
+to spawning the command without a shell.
 
 ## Errors
 
