@@ -23,4 +23,4 @@ updates:
     groups:
       all:
         patterns:
-          - '*'
+          - "*"
