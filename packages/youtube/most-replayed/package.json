@@ -45,10 +45,10 @@
     "@ytutils/core": "workspace:*"
   },
   "devDependencies": {
-    "puppeteer": "^25.12.0"
+    "puppeteer": "^25.15.0"
   },
   "peerDependencies": {
-    "puppeteer": "^25.12.0"
+    "puppeteer": "^25.15.0"
   },
   "peerDependenciesMeta": {
     "puppeteer": {
