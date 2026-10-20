@@ -18,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: jdx/mise-action@v5
+      - uses: jdx/mise-action@fc42bcc7ddbf51124c30f95a877a0c5168a3bfde # v5
 
       - name: Install media binaries for the video-chunker test suite
         run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
