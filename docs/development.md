@@ -11,10 +11,11 @@ must preserve.
 
 ## Set up
 
-Install the pinned tools and the workspace dependencies from `bun.lock`:
+Install the pinned tools, then the workspace dependencies from `bun.lock`:
 
 ```sh
-mise run install
+mise install
+bun run setup
 ```
 
 The video workflows also need `yt-dlp`, `ffmpeg`, and `ffprobe` on `PATH`. The
@@ -34,17 +35,17 @@ Development uses OXLint's type-aware backend from
 Run the repository gate:
 
 ```sh
-mise run check
+bun run check
 ```
 
 `check` runs `lint`, `typecheck`, `test`, and `build`, and writes no tracked
 file. Run an individual task when you are working on one area:
 
 ```sh
-mise run lint
-mise run fix
-mise run typecheck
-mise run test
+bun run lint
+bun run fix
+bun run typecheck
+bun run test
 ```
 
 `lint` runs `lint:ts` (OXLint), `lint:format` (OXFmt on source, Markdown, YAML,
@@ -59,7 +60,7 @@ against the merge base with the remote default branch.
 Build every package and the CLI:
 
 ```sh
-mise run build
+bun run build
 ```
 
 `build` builds the six library packages and the CLI.
@@ -68,17 +69,17 @@ mise run build
 
 Each package carries a committed copy of the root `LICENSE` because package
 managers do not preserve a repository-level symlink when packing a package. If a
-license check fails after the root license changes, run `mise run fix` to copy
+license check fails after the root license changes, run `bun run fix` to copy
 the new file into every package.
 
 The release workflow rewrites a package's `workspace:*` dependency ranges to
 real versions. Run the same step for a package directory with:
 
 ```sh
-mise run release:rewrite packages/youtube/metadata
+bun run release:rewrite packages/youtube/metadata
 ```
 
-The workflow then publishes the package with `mise run release:publish`.
+The workflow then publishes the package with `bun run release:publish`.
 
 The release workflow then runs the package checks on the rewritten package. The
 package registry cannot resolve the workspace protocol itself. The rewrite
@@ -105,4 +106,4 @@ output contract.
 
 Keep a package contract in its package README, a code boundary in
 [`architecture.md`](../architecture.md), and repository workflow here. Format
-Markdown with OXFmt through `mise run fix`.
+Markdown with OXFmt through `bun run fix`.

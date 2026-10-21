@@ -14,8 +14,8 @@ dependencies and build before running the importing package. The package exports
 point at `dist`, so the build is required:
 
 ```sh
-mise run install
-mise run build
+bun run setup
+bun run build
 ```
 
 ## Authentication

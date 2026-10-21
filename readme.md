@@ -9,7 +9,8 @@ process video. It provides libraries and a command-line application.
 Clone the repository, install its dependencies, and print the chunker help:
 
 ```sh
-mise run install
+mise install
+bun run setup
 bun run --cwd apps/video-chunker-cli start --help
 ```
 
@@ -43,8 +44,8 @@ From the repository root, install dependencies and build the workspace before
 running a sibling package that imports a library:
 
 ```sh
-mise run install
-mise run build
+bun run setup
+bun run build
 ```
 
 ## Packages
