@@ -29,7 +29,7 @@ jobs:
 
       - uses: jdx/mise-action@fc42bcc7ddbf51124c30f95a877a0c5168a3bfde # v5
 
-      - run: mise run install
+      - run: bun run setup
 
       - name: Resolve version from tag
         id: version
@@ -60,10 +60,10 @@ jobs:
       - name: Install media binaries for the video-chunker test suite
         run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
 
-      - run: mise run check
+      - run: bun run check
 
       - name: Rewrite workspace dependency ranges
-        run: mise run release:rewrite ${{ inputs.package_dir }}
+        run: bun run release:rewrite ${{ inputs.package_dir }}
 
       - name: Publish package
-        run: mise run release:publish ${{ inputs.package_dir }}
+        run: bun run release:publish ${{ inputs.package_dir }}

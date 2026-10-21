@@ -28,6 +28,6 @@ jobs:
       - name: Install media binaries for the video-chunker test suite
         run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
 
-      - run: mise run install
+      - run: bun run setup
 
-      - run: mise run check
+      - run: bun run check
