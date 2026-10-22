@@ -1,5 +1,3 @@
-// The tag version must match the manifest version and release notes.
-// Without --tag, the check validates the manifest and notes for a dry run.
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { parseArgs } from 'node:util'
