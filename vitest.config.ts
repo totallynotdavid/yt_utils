@@ -6,7 +6,6 @@ export default defineConfig({
     alias: {
       '@ytutils/core': resolve(__dirname, 'packages/shared/core/src/index.ts'),
       '@ytutils/metadata': resolve(__dirname, 'packages/youtube/metadata/src/index.ts'),
-      '@ytutils/duration': resolve(__dirname, 'packages/youtube/duration/src/index.ts'),
       '@ytutils/most-replayed': resolve(__dirname, 'packages/youtube/most-replayed/src/index.ts'),
       '@ytutils/video-processor': resolve(
         __dirname,

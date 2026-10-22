@@ -1,6 +1,7 @@
 import type { HttpClient } from '@ytutils/core'
 import { YtUtilsError } from '@ytutils/core'
 
+import { parseIsoDuration } from '../domain/duration'
 import type { MetadataResult, SearchItem, VideoDetailItem } from '../domain/types'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -141,8 +142,10 @@ export async function getVideoDetails(
     throw new YtUtilsError('NOT_FOUND', `Video details not found for ${videoId}`)
   }
 
+  const durationIso = item.contentDetails?.duration
   return {
-    durationIso: item.contentDetails?.duration,
+    durationIso,
+    durationSeconds: durationIso === undefined ? undefined : parseIsoDuration(durationIso),
     title: item.snippet?.title,
     channelTitle: item.snippet?.channelTitle,
     thumbnailUrl: pickThumbnail(item.snippet),

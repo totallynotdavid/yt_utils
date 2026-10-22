@@ -6,6 +6,7 @@ export type MetadataResult = {
   mediaId: string
   mediaType: 'video' | 'playlist' | 'channel'
   durationIso?: string
+  durationSeconds?: number
   title?: string
   channelTitle?: string
   thumbnailUrl?: string

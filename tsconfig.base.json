@@ -3,7 +3,6 @@
     "paths": {
       "@ytutils/core": ["./packages/shared/core/src/index.ts"],
       "@ytutils/metadata": ["./packages/youtube/metadata/src/index.ts"],
-      "@ytutils/duration": ["./packages/youtube/duration/src/index.ts"],
       "@ytutils/most-replayed": [
         "./packages/youtube/most-replayed/src/index.ts"
       ],
