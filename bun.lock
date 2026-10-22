@@ -17,7 +17,6 @@
     },
     "apps/video-chunker-cli": {
       "name": "@ytutils/video-chunker-cli",
-      "version": "0.1.0",
       "bin": {
         "video-chunker": "dist/bin.js",
       },
@@ -27,26 +26,15 @@
     },
     "packages/shared/core": {
       "name": "@ytutils/core",
-      "version": "0.1.0",
-    },
-    "packages/youtube/duration": {
-      "name": "@ytutils/duration",
-      "version": "0.1.0",
-      "dependencies": {
-        "@ytutils/core": "workspace:*",
-        "@ytutils/metadata": "workspace:*",
-      },
     },
     "packages/youtube/metadata": {
       "name": "@ytutils/metadata",
-      "version": "0.1.0",
       "dependencies": {
         "@ytutils/core": "workspace:*",
       },
     },
     "packages/youtube/most-replayed": {
       "name": "@ytutils/most-replayed",
-      "version": "0.1.0",
       "dependencies": {
         "@ytutils/core": "workspace:*",
       },
@@ -62,11 +50,9 @@
     },
     "packages/youtube/video-chunker": {
       "name": "@ytutils/video-chunker",
-      "version": "0.1.0",
     },
     "packages/youtube/video-processor": {
       "name": "@ytutils/video-processor",
-      "version": "0.1.0",
       "dependencies": {
         "@ytutils/core": "workspace:*",
       },
@@ -392,8 +378,6 @@
     "@vitest/spy": ["@vitest/spy@5.0.5", "", {}, "sha512-lwJRExuH417257Q5wv9QYugN9IMJkoxcrKrYxGPQkBzl7wlNpTUxD/5yNX4ESKVUIShKPgkGchYPFMWOOk0wzw=="],
 
     "@ytutils/core": ["@ytutils/core@workspace:packages/shared/core"],
-
-    "@ytutils/duration": ["@ytutils/duration@workspace:packages/youtube/duration"],
 
     "@ytutils/metadata": ["@ytutils/metadata@workspace:packages/youtube/metadata"],
 

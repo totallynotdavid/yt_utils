@@ -1,32 +1,8 @@
 {
   "name": "@ytutils/video-processor",
-  "version": "0.1.0",
-  "private": false,
+  "private": true,
   "description": "yt-dlp and ffmpeg based download and processing pipeline",
-  "keywords": [
-    "audio",
-    "ffmpeg",
-    "transcode",
-    "video",
-    "youtube",
-    "ytdlp"
-  ],
-  "homepage": "https://github.com/totallynotdavid/yt_utils/tree/master/packages/youtube/video-processor#readme",
-  "bugs": {
-    "url": "https://github.com/totallynotdavid/yt_utils/issues"
-  },
-  "license": "MIT",
   "author": "David Duran",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/totallynotdavid/yt_utils.git",
-    "directory": "packages/youtube/video-processor"
-  },
-  "files": [
-    "dist",
-    "readme.md",
-    "LICENSE"
-  ],
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -39,8 +15,7 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --root ../../..",
-    "build": "bunup",
-    "prepublishOnly": "bun run typecheck && bun run test && bun run build"
+    "build": "bunup"
   },
   "dependencies": {
     "@ytutils/core": "workspace:*"

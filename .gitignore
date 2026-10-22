@@ -9,5 +9,4 @@ dist
 .fallow/
 output/
 media/
-*.tgz
 cookies.txt

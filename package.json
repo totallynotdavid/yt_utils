@@ -7,20 +7,15 @@
   ],
   "scripts": {
     "setup": "bun install --frozen-lockfile",
-    "lint": "bun run lint:ts && bun run lint:format && bun run lint:license && bun run lint:dead",
-    "lint:ts": "oxlint --deny-warnings packages apps scripts",
+    "lint": "bun run lint:ts && bun run lint:format && bun run lint:dead",
+    "lint:ts": "oxlint --deny-warnings packages apps",
     "lint:format": "oxfmt --check .",
-    "lint:license": "for d in packages/*/* apps/*; do cmp -s LICENSE \"$d/LICENSE\" || { echo \"LICENSE out of sync in $d (fix: bun run fix:license)\"; exit 1; }; done",
     "lint:dead": "fallow audit",
-    "fix": "bun run fix:code && bun run fix:license",
-    "fix:code": "oxlint --fix packages apps scripts && oxfmt .",
-    "fix:license": "for d in packages/*/* apps/*; do cp LICENSE \"$d/LICENSE\"; done",
+    "fix": "oxlint --fix packages apps && oxfmt .",
     "typecheck": "tsc -p tsconfig.json --noEmit && bun run --workspaces typecheck",
     "test": "vitest run",
     "build": "for d in packages/*/* apps/*; do (cd \"$d\" && bun run build) || exit 1; done",
-    "check": "bun run lint && bun run typecheck && bun run test && bun run build",
-    "release:rewrite": "bun scripts/rewrite-workspace-deps.ts",
-    "release:publish": "npm publish --provenance --access public"
+    "check": "bun run lint && bun run typecheck && bun run test && bun run build"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

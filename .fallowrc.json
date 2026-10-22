@@ -7,8 +7,7 @@
     "apps/*/src/bin.ts",
     "apps/*/test/**/*.test.ts",
     "apps/*/bunup.config.ts",
-    "vitest.config.ts",
-    "scripts/*.ts"
+    "vitest.config.ts"
   ],
   "ignorePatterns": ["**/node_modules/**", "**/dist/**", "**/coverage/**"],
   "ignoreDependencies": [
@@ -18,15 +17,6 @@
     "vitest",
     "typescript",
     "@types/node"
-  ],
-  "publicPackages": [
-    "@ytutils/core",
-    "@ytutils/metadata",
-    "@ytutils/duration",
-    "@ytutils/most-replayed",
-    "@ytutils/video-processor",
-    "@ytutils/video-chunker",
-    "@ytutils/video-chunker-cli"
   ],
   "rules": {
     "unused-exports": "warn",
