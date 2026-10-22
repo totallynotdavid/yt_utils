@@ -13,13 +13,60 @@ on:
         required: true
         type: string
 
+env:
+  PACKAGE_DIR: ${{ inputs.package_dir }}
+  PACKAGE_NAME: ${{ inputs.package_name }}
+  TAG_PREFIX: ${{ inputs.tag_prefix }}
+  TARBALL: ./pack/package.tgz
+
 jobs:
-  publish:
+  preflight:
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'totallynotdavid' }}
 
     permissions:
-      id-token: write
+      actions: read
+      contents: read
+      deployments: read
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Environments named by the publish job exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          environments=$(yq '.jobs[].environment | select(. != null) | (.name // .)' .github/workflows/publish-package.yml)
+          if [ -z "$environments" ]; then
+            echo "publish-package.yml names no environment"
+            exit 1
+          fi
+          for environment in $environments; do
+            if ! gh api "repos/${GITHUB_REPOSITORY}/environments/${environment}" --silent; then
+              echo "Environment '${environment}' does not exist in ${GITHUB_REPOSITORY}."
+              echo "Create it under Settings > Environments. See docs/release.md."
+              exit 1
+            fi
+            echo "environment ok: ${environment}"
+          done
+
+      # Trusted publishing requires the package to exist on npm. The publish
+      # job uses no npm token, so preflight checks the package here.
+      - name: Package exists on npm
+        run: |
+          if ! npm view "$PACKAGE_NAME" name --registry https://registry.npmjs.org; then
+            echo "$PACKAGE_NAME is not on npm. Publish it once and add the trusted publisher."
+            echo "See docs/release.md."
+            exit 1
+          fi
+
+  package:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'totallynotdavid' }}
+
+    permissions:
       contents: read
 
     steps:
@@ -31,31 +78,13 @@ jobs:
 
       - run: bun run setup
 
-      - name: Resolve version from tag
-        id: version
-        shell: bash
+      - name: Check tag, version and release notes
+        env:
+          TAG:
+            ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
         run: |
-          tag="${GITHUB_REF_NAME}"
-          prefix="${{ inputs.tag_prefix }}"
-          if [[ "$tag" != "$prefix"* ]]; then
-            echo "Tag $tag does not match expected prefix $prefix"
-            exit 1
-          fi
-          version="${tag#$prefix}"
-          if [[ -z "$version" ]]; then
-            echo "Resolved version is empty"
-            exit 1
-          fi
-          echo "value=$version" >> "$GITHUB_OUTPUT"
-
-      - name: Validate declared version matches tag
-        shell: bash
-        run: |
-          pkg_version=$(node -p "require('./${{ inputs.package_dir }}/package.json').version")
-          if [ "$pkg_version" != "${{ steps.version.outputs.value }}" ]; then
-            echo "Version mismatch for ${{ inputs.package_name }}: tag=${{ steps.version.outputs.value }} package=$pkg_version"
-            exit 1
-          fi
+          bun scripts/check-release.ts --dir "$PACKAGE_DIR" --name "$PACKAGE_NAME" \
+            --prefix "$TAG_PREFIX" ${TAG:+--tag "$TAG"}
 
       - name: Install media binaries for the video-chunker test suite
         run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
@@ -63,7 +92,74 @@ jobs:
       - run: bun run check
 
       - name: Rewrite workspace dependency ranges
-        run: bun run release:rewrite ${{ inputs.package_dir }}
+        run: bun run release:rewrite "$PACKAGE_DIR"
+
+      - name: Pack
+        run: |
+          mkdir -p pack
+          npm pack "./$PACKAGE_DIR" --pack-destination pack
+          mv pack/*.tgz "$TARBALL"
+          tar -tzf "$TARBALL"
+
+      - name: Publish dry run
+        run: bun run release:publish "$TARBALL" --dry-run
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: package
+          path: pack/package.tgz
+          retention-days: 1
+          if-no-files-found: error
+
+  publish:
+    needs: [preflight, package]
+    runs-on: ubuntu-latest
+    if:
+      ${{ github.repository_owner == 'totallynotdavid' && startsWith(github.ref,
+      'refs/tags/') }}
+    environment: npm-publish
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@fc42bcc7ddbf51124c30f95a877a0c5168a3bfde # v5
+
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: package
+          path: pack
 
       - name: Publish package
-        run: bun run release:publish ${{ inputs.package_dir }}
+        run: bun run release:publish "$TARBALL"
+
+  github-release:
+    needs: publish
+    runs-on: ubuntu-latest
+    if:
+      ${{ github.repository_owner == 'totallynotdavid' && startsWith(github.ref,
+      'refs/tags/') }}
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes="$PACKAGE_DIR/release-notes.md"
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release edit "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file "$notes"
+          else
+            gh release create "$GITHUB_REF_NAME" --verify-tag --title "$GITHUB_REF_NAME" --notes-file "$notes"
+          fi
