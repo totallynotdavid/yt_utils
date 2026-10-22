@@ -6,8 +6,7 @@ CLI; it requires `yt-dlp`, `ffmpeg`, and `ffprobe` on `PATH`.
 
 ## Use from the workspace
 
-`@ytutils/video-chunker` is not published to npm; use it from the workspace. Use
-`@ytutils/video-chunker` from a sibling workspace package. Declare the
+Use `@ytutils/video-chunker` from a sibling workspace package. Declare the
 dependency as `"@ytutils/video-chunker": "workspace:*"`, then from the
 repository root install dependencies and build before running the importing
 package. The package exports point at `dist`, so the build is required:

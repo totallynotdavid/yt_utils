@@ -6,7 +6,6 @@ it produces. Fixed-length chunking is provided by `@ytutils/video-chunker`.
 
 ## Use from the workspace
 
-`@ytutils/video-processor` is not published to npm; use it from the workspace.
 Use `@ytutils/video-processor` from a sibling workspace package. Declare the
 dependency as `"@ytutils/video-processor": "workspace:*"`, then from the
 repository root install dependencies and build before running the importing

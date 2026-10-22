@@ -7,8 +7,7 @@ and a final chunk summary, and delegates the workflow to
 
 ## Use from the workspace
 
-`@ytutils/video-chunker-cli` is not published to npm; use it from the workspace.
-From the repository root, install dependencies:
+Run the CLI from the repository root. Install dependencies first:
 
 ```sh
 bun install

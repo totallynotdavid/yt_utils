@@ -11,7 +11,6 @@ README owns the caller-facing contract.
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
 | [`packages/shared/core`](./packages/shared/core)                         | Shared errors, HTTP contracts, and YouTube reference parsing.                                           |
 | [`packages/youtube/metadata`](./packages/youtube/metadata)               | Resolves direct references and search queries, then reads video details from the YouTube Data API.      |
-| [`packages/youtube/duration`](./packages/youtube/duration)               | Gets video details through metadata and converts ISO-8601 duration into numbers or a clock string.      |
 | [`packages/youtube/most-replayed`](./packages/youtube/most-replayed)     | Reads replay markers from watch-page JSON or a rendered SVG heatmap, then ranks segments.               |
 | [`packages/youtube/video-processor`](./packages/youtube/video-processor) | Normalizes one processing request, invokes `yt-dlp`, and converts the result with `ffmpeg` when needed. |
 | [`packages/youtube/video-chunker`](./packages/youtube/video-chunker)     | Downloads one URL, probes its media, and splits it with `ffmpeg`'s segment muxer.                       |
@@ -22,12 +21,8 @@ README owns the caller-facing contract.
 ```text
 @ytutils/core
 ├── @ytutils/metadata
-├── @ytutils/duration
 ├── @ytutils/most-replayed
 └── @ytutils/video-processor
-
-@ytutils/metadata
-└── @ytutils/duration
 
 @ytutils/video-chunker
 └── @ytutils/video-chunker-cli
@@ -50,7 +45,7 @@ needs the YouTube Data API.
 15-second default timeout. [`errors.ts`](./packages/shared/core/src/errors.ts)
 owns `YtUtilsError` and the shared error-code union.
 
-### Metadata and duration
+### Metadata
 
 [`get_metadata.ts`](./packages/youtube/metadata/src/application/get_metadata.ts)
 resolves a query, calls search when necessary, and fetches video details only
@@ -59,10 +54,8 @@ for videos in `fullData` mode.
 API responses and chooses thumbnails in this order: `maxres`, `standard`,
 `high`, `medium`, then `default`.
 
-[`get_duration.ts`](./packages/youtube/duration/src/application/get_duration.ts)
-delegates reference resolution and API access to metadata. It parses the
-returned ISO-8601 duration and owns the seconds, minutes, hours, and clock
-representations.
+[`duration.ts`](./packages/youtube/metadata/src/domain/duration.ts) parses the
+ISO-8601 duration into `durationSeconds` and formats seconds as a clock string.
 
 ### Most replayed
 

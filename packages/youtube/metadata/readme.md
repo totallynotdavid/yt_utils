@@ -7,9 +7,8 @@ local.
 
 ## Use from the workspace
 
-`@ytutils/metadata` is not published to npm; use it from the workspace. Use
-`@ytutils/metadata` from a sibling workspace package. Declare the dependency as
-`"@ytutils/metadata": "workspace:*"`, then from the repository root install
+Use `@ytutils/metadata` from a sibling workspace package. Declare the dependency
+as `"@ytutils/metadata": "workspace:*"`, then from the repository root install
 dependencies and build before running the importing package. The package exports
 point at `dist`, so the build is required:
 
@@ -40,6 +39,7 @@ await getMetadata('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 //   mediaId: 'dQw4w9WgXcQ',
 //   mediaType: 'video',
 //   durationIso: 'PT3M33S',
+//   durationSeconds: 213,
 //   title: 'Rick Astley - Never Gonna Give You Up (Official Music Video)',
 //   channelTitle: 'Rick Astley',
 //   thumbnailUrl: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
@@ -59,11 +59,29 @@ await getMetadata('never gonna give you up', { fetchType: 'idOnly' })
 `fullData` details are only fetched for videos; playlists and channels return
 their id and type.
 
+## Print a video's duration
+
+```ts
+import { formatClock, getMetadata } from '@ytutils/metadata'
+
+const video = await getMetadata('dQw4w9WgXcQ')
+
+if (video.durationSeconds === undefined) {
+  console.log('no duration') // the API returned none for this video
+} else {
+  console.log(formatClock(video.durationSeconds)) // 03:33
+}
+```
+
+`formatClock(seconds)` returns `MM:SS`, or `HH:MM:SS` from one hour up.
+`durationSeconds` is the number of seconds in `durationIso`.
+
 ## Features
 
 - Resolve video IDs, supported URLs, playlists, channels, and search queries.
 - Return IDs and media types without an API call for direct `idOnly` URLs.
-- Fetch video duration, title, channel, thumbnail, view count, and like count.
+- Fetch video duration (ISO-8601 and seconds), title, channel, thumbnail, view
+  count, and like count.
 - Fall back through the available thumbnail sizes.
 
 ## API reference
@@ -82,16 +100,25 @@ their id and type.
 
 Returns a `MetadataResult`:
 
-| field          | present on | meaning                                 |
-| -------------- | ---------- | --------------------------------------- |
-| `mediaId`      | always     | video id, playlist id, or channel id    |
-| `mediaType`    | always     | `'video'`, `'playlist'`, or `'channel'` |
-| `durationIso`  | videos     | ISO-8601 duration, e.g. `PT3M33S`       |
-| `title`        | videos     | video title                             |
-| `channelTitle` | videos     | channel that published the video        |
-| `thumbnailUrl` | videos     | best available thumbnail                |
-| `viewCount`    | videos     | view count as a string                  |
-| `likeCount`    | videos     | like count as a string                  |
+| field             | present on | meaning                                 |
+| ----------------- | ---------- | --------------------------------------- |
+| `mediaId`         | always     | video id, playlist id, or channel id    |
+| `mediaType`       | always     | `'video'`, `'playlist'`, or `'channel'` |
+| `durationIso`     | videos     | ISO-8601 duration, e.g. `PT3M33S`       |
+| `durationSeconds` | videos     | `durationIso` in seconds, e.g. `213`    |
+| `title`           | videos     | video title                             |
+| `channelTitle`    | videos     | channel that published the video        |
+| `thumbnailUrl`    | videos     | best available thumbnail                |
+| `viewCount`       | videos     | view count as a string                  |
+| `likeCount`       | videos     | like count as a string                  |
+
+The duration fields are absent when the API returns no duration for the video.
+
+### `formatClock(seconds)`
+
+Returns `seconds` as `MM:SS`, or `HH:MM:SS` from one hour up. Fractions are
+floored and negative values count as zero. `NaN` and infinite values throw
+`INVALID_INPUT`.
 
 Thumbnails are resolved in this order, falling back when a size is missing:
 `maxres` → `standard` → `high` → `medium` → `default`.
@@ -100,12 +127,12 @@ Thumbnails are resolved in this order, falling back when a size is missing:
 
 Errors are `YtUtilsError` from `@ytutils/core` with a `code`:
 
-| code             | when                                                 |
-| ---------------- | ---------------------------------------------------- |
-| `INVALID_INPUT`  | unparsable input or missing API key                  |
-| `NOT_FOUND`      | no result for the query, or the video has no details |
-| `UPSTREAM_ERROR` | the YouTube Data API returned a non-2xx response     |
-| `PARSING_ERROR`  | the API response could not be parsed                 |
+| code             | when                                                                 |
+| ---------------- | -------------------------------------------------------------------- |
+| `INVALID_INPUT`  | unparsable input, missing API key, or non-finite `formatClock` input |
+| `NOT_FOUND`      | no result for the query, or the video has no details                 |
+| `UPSTREAM_ERROR` | the YouTube Data API returned a non-2xx response                     |
+| `PARSING_ERROR`  | the API response or its ISO-8601 duration is invalid                 |
 
 ## Links
 

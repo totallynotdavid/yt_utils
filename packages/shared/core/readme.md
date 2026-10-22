@@ -6,8 +6,7 @@ requests and external media programs.
 
 ## Use from the workspace
 
-`@ytutils/core` is not published to npm; use it from the workspace. Use
-`@ytutils/core` from a sibling workspace package. Declare the dependency as
+Use `@ytutils/core` from a sibling workspace package. Declare the dependency as
 `"@ytutils/core": "workspace:*"`, then from the repository root install
 dependencies and build before running the importing package. The package exports
 point at `dist`, so the build is required:

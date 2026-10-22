@@ -13,8 +13,7 @@ Two extraction strategies, usable independently:
 
 ## Use from the workspace
 
-`@ytutils/most-replayed` is not published to npm; use it from the workspace. Use
-`@ytutils/most-replayed` from a sibling workspace package. Declare the
+Use `@ytutils/most-replayed` from a sibling workspace package. Declare the
 dependency as `"@ytutils/most-replayed": "workspace:*"`, then from the
 repository root install dependencies and build before running the importing
 package. The package exports point at `dist`, so the build is required:

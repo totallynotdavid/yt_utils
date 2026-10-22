@@ -49,8 +49,8 @@ bun run test
 ```
 
 `lint` runs `lint:ts` (OXLint), `lint:format` (OXFmt on source, Markdown, YAML,
-and JSON), `lint:license`, and `lint:dead`. `fix` applies the OXLint fixes,
-formats with OXFmt, and copies the root license into each package.
+and JSON), and `lint:dead`. `fix` applies the OXLint fixes and formats with
+OXFmt.
 
 `lint:dead` runs `fallow audit`, which reports findings in the files changed
 against the merge base with the remote default branch.
@@ -63,30 +63,7 @@ Build every package and the CLI:
 bun run build
 ```
 
-`build` builds the six library packages and the CLI.
-
-## Package checks and release
-
-Each package carries a committed copy of the root `LICENSE` because package
-managers do not preserve a repository-level symlink when packing a package. If a
-license check fails after the root license changes, run `bun run fix` to copy
-the new file into every package.
-
-The release workflow rewrites a package's `workspace:*` dependency ranges to
-real versions. Run the same step for a package directory with:
-
-```sh
-bun run release:rewrite packages/youtube/metadata
-```
-
-The workflow then publishes the package with `bun run release:publish`.
-
-The release workflow then runs the package checks on the rewritten package. The
-package registry cannot resolve the workspace protocol itself. The rewrite
-command mutates the tracked package manifest, so run it in a clean release
-checkout or restore the manifest before continuing with other work. Each
-package's `prepublishOnly` script runs its typecheck, the root test suite, and
-its Bunup build.
+`build` builds the five library packages and the CLI.
 
 ## CLI
 

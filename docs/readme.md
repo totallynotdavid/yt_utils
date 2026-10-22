@@ -11,7 +11,6 @@ Start with the package README for a caller-facing API:
 
 - [`@ytutils/core`](../packages/shared/core/readme.md)
 - [`@ytutils/metadata`](../packages/youtube/metadata/readme.md)
-- [`@ytutils/duration`](../packages/youtube/duration/readme.md)
 - [`@ytutils/most-replayed`](../packages/youtube/most-replayed/readme.md)
 - [`@ytutils/video-processor`](../packages/youtube/video-processor/readme.md)
 - [`@ytutils/video-chunker`](../packages/youtube/video-chunker/readme.md)
