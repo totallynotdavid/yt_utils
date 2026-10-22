@@ -5,7 +5,9 @@ package contracts. The architecture document owns code boundaries.
 
 1. [Development](./development.md) covers local setup, checks, builds, the CLI
    workflow, and documentation changes.
-2. [Architecture](../architecture.md) maps packages and module boundaries.
+2. [Release](./release.md) covers the release workflows, the pull request dry
+   run, and the one-time npm and GitHub setup.
+3. [Architecture](../architecture.md) maps packages and module boundaries.
 
 Start with the package README for a caller-facing API:
 

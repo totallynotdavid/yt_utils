@@ -79,14 +79,20 @@ real versions. Run the same step for a package directory with:
 bun run release:rewrite packages/youtube/metadata
 ```
 
-The workflow then publishes the package with `bun run release:publish`.
-
-The release workflow then runs the package checks on the rewritten package. The
-package registry cannot resolve the workspace protocol itself. The rewrite
+The package registry cannot resolve the workspace protocol itself. The rewrite
 command mutates the tracked package manifest, so run it in a clean release
-checkout or restore the manifest before continuing with other work. Each
-package's `prepublishOnly` script runs its typecheck, the root test suite, and
-its Bunup build.
+checkout or restore the manifest before continuing with other work.
+
+Check a package's tag, version and release notes the way the release workflow
+does. Omit `--tag` to check the manifest and notes alone:
+
+```sh
+bun scripts/check-release.ts --dir packages/youtube/metadata \
+  --name @ytutils/metadata --prefix metadata-v --tag metadata-v0.1.0
+```
+
+[Release](./release.md) describes the release workflow, its dry run on pull
+requests, and the npm and GitHub setup a maintainer does once.
 
 ## CLI
 
