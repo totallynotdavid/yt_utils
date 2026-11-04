@@ -21,7 +21,7 @@
     "@ytutils/core": "workspace:*"
   },
   "devDependencies": {
-    "puppeteer": "^25.15.0"
+    "puppeteer": "^25.16.0"
   },
   "peerDependencies": {
     "puppeteer": "^25.15.0"

@@ -18,13 +18,13 @@
     "check": "bun run lint && bun run typecheck && bun run test && bun run build"
   },
   "devDependencies": {
-    "@types/node": "^26.6.5",
+    "@types/node": "^26.6.6",
     "bunup": "^0.16.32",
-    "fallow": "^3.37.0",
-    "oxfmt": "^0.75.0",
-    "oxlint": "^1.90.0",
+    "fallow": "^3.39.0",
+    "oxfmt": "^0.76.0",
+    "oxlint": "^1.91.0",
     "oxlint-tsgolint": "^7.0.2005",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.0"
   }
 }
