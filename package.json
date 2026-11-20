@@ -20,11 +20,11 @@
   "devDependencies": {
     "@types/node": "^26.6.6",
     "bunup": "^0.16.32",
-    "fallow": "^3.39.0",
-    "oxfmt": "^0.76.0",
-    "oxlint": "^1.91.0",
-    "oxlint-tsgolint": "^7.0.2005",
+    "fallow": "^3.45.0",
+    "oxfmt": "^0.79.0",
+    "oxlint": "^1.94.0",
+    "oxlint-tsgolint": "^7.0.2007",
     "typescript": "^7.0.2",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   }
 }
